@@ -18,7 +18,7 @@ This document provides comprehensive recommendations for implementing a three-ti
 
 ---
 
-## Tier 1: Silver (Free / Entry Level)
+## Tier 1: <span style="color:#6b7280">Silver</span> (Free / Entry Level)
 
 ### Target User Profile
 - New users exploring the app
@@ -33,32 +33,32 @@ This document provides comprehensive recommendations for implementing a three-ti
 | Chat Messages | 50 per month |
 
 ### Features Included
-- ✓ Basic receipt scanning and OCR
-- ✓ Automatic item categorization (16 categories)
-- ✓ Health scoring for food items
-- ✓ Monthly spending summary
-- ✓ Basic category breakdown charts
-- ✓ Store-level spending view
+- <span style="color:#16a34a">✓</span> Basic receipt scanning and OCR
+- <span style="color:#16a34a">✓</span> Automatic item categorization (16 categories)
+- <span style="color:#16a34a">✓</span> Health scoring for food items
+- <span style="color:#16a34a">✓</span> Monthly spending summary
+- <span style="color:#16a34a">✓</span> Basic category breakdown charts
+- <span style="color:#16a34a">✓</span> Store-level spending view
 
 ### Features Excluded
-- ✗ Advanced analytics and trends
-- ✗ Export to CSV/PDF
-- ✗ Priority AI processing
-- ✗ Historical data beyond 3 months
-- ✗ Custom categories
-- ✗ Ad-free experience
+- <span style="color:#ef4444">✗</span> Advanced analytics and trends
+- <span style="color:#ef4444">✗</span> Export to CSV/PDF
+- <span style="color:#ef4444">✗</span> Priority AI processing
+- <span style="color:#ef4444">✗</span> Historical data beyond 3 months
+- <span style="color:#ef4444">✗</span> Custom categories
+- <span style="color:#ef4444">✗</span> Ad-free experience
 
 ### Cost Analysis
 | Item | Cost |
 |------|------|
-| Receipts: 10 × $0.0802 | $0.80 |
-| Chat: 50 × $0.0003 | $0.02 |
-| **Total Variable Cost** | **$0.82/month** |
+| Receipts: 10 × $0.0802 | <span style="color:#ef4444">$0.80</span> |
+| Chat: 50 × $0.0003 | <span style="color:#ef4444">$0.02</span> |
+| **Total Variable Cost** | <span style="color:#ef4444">**$0.82/month**</span> |
 
 ### Monetization Strategy
-**RECOMMENDED:** Pure freemium (Option B)
+<span style="background-color:#dbeafe; padding: 8px; display: block; border-left: 4px solid #3b82f6;">**RECOMMENDED:** Pure freemium (Option B)
 
-Rationale: Ads may degrade user experience and reduce conversion rates. The $0.82 variable cost is acceptable customer acquisition cost.
+Rationale: Ads may degrade user experience and reduce conversion rates. The <span style="color:#ef4444">$0.82</span> variable cost is acceptable customer acquisition cost.</span>
 
 ### Conversion Triggers
 - "You've used 8 of 10 receipts this month"
@@ -68,7 +68,7 @@ Rationale: Ads may degrade user experience and reduce conversion rates. The $0.8
 
 ---
 
-## Tier 2: Gold (Standard Paid)
+## Tier 2: <span style="color:#f59e0b">Gold</span> (Standard Paid)
 
 ### Target User Profile
 - Regular grocery shoppers (3-4 trips/week)
@@ -89,15 +89,15 @@ Rationale: Ads may degrade user experience and reduce conversion rates. The $0.8
 - Creates clear value gap from Silver (4x more)
 
 ### Features Included
-- ✓ Everything in Silver, plus:
-- ✓ Full spending analytics dashboard
-- ✓ Weekly and monthly trend analysis
-- ✓ Year-over-year comparisons
-- ✓ Export to CSV and PDF
-- ✓ 12-month historical data
-- ✓ Store comparison insights
-- ✓ Ad-free experience
-- ✓ Email spending reports
+- <span style="color:#16a34a">✓</span> Everything in <span style="color:#6b7280">Silver</span>, plus:
+- <span style="color:#16a34a">✓</span> Full spending analytics dashboard
+- <span style="color:#16a34a">✓</span> Weekly and monthly trend analysis
+- <span style="color:#16a34a">✓</span> Year-over-year comparisons
+- <span style="color:#16a34a">✓</span> Export to CSV and PDF
+- <span style="color:#16a34a">✓</span> 12-month historical data
+- <span style="color:#16a34a">✓</span> Store comparison insights
+- <span style="color:#16a34a">✓</span> Ad-free experience
+- <span style="color:#16a34a">✓</span> Email spending reports
 
 ### Pricing Recommendation
 | Period | Price |
@@ -108,27 +108,27 @@ Rationale: Ads may degrade user experience and reduce conversion rates. The $0.8
 ### Cost Analysis
 | Item | Amount |
 |------|--------|
-| Receipts: 40 × $0.0802 | $3.21 |
-| Chat: 200 × $0.0003 | $0.06 |
-| **Total Variable Cost** | **$3.27/month** |
-| Revenue (at $6.49 avg) | $6.49 |
-| **Gross Profit** | **$3.22** |
-| **Gross Margin** | **49.6%** |
+| Receipts: 40 × $0.0802 | <span style="color:#ef4444">$3.21</span> |
+| Chat: 200 × $0.0003 | <span style="color:#ef4444">$0.06</span> |
+| **Total Variable Cost** | <span style="color:#ef4444">**$3.27/month**</span> |
+| Revenue (at $6.49 avg) | <span style="color:#16a34a">$6.49</span> |
+| <span style="color:#16a34a">**Gross Profit**</span> | <span style="color:#16a34a">**$3.22**</span> |
+| <span style="color:#16a34a">**Gross Margin**</span> | <span style="color:#16a34a">**49.6%**</span> |
 
 ### Margin Analysis
 | Price | Margin | Profit |
 |-------|--------|--------|
-| $5.99 | 45.4% | $2.72 |
-| $6.49 | 49.6% | $3.22 |
-| $6.99 | 53.2% | $3.72 |
+| $5.99 | <span style="color:#f59e0b">45.4%</span> | $2.72 |
+| $6.49 | <span style="color:#16a34a">49.6%</span> | <span style="color:#16a34a">$3.22</span> |
+| $6.99 | <span style="color:#16a34a">53.2%</span> | <span style="color:#16a34a">$3.72</span> |
 
-**RECOMMENDED PRICE: $6.49/month**
+<span style="background-color:#dbeafe; padding: 8px; display: block; border-left: 4px solid #3b82f6;">**RECOMMENDED PRICE: <span style="color:#f59e0b">$6.49/month</span>**
 
-Rationale: Balanced price point that maintains ~50% margin while remaining competitive with similar apps (Mint free, YNAB $14.99, Copilot $9.99).
+Rationale: Balanced price point that maintains ~50% margin while remaining competitive with similar apps (Mint free, YNAB $14.99, Copilot $9.99).</span>
 
 ---
 
-## Tier 3: Platinum (Premium)
+## Tier 3: <span style="color:#a855f7">Platinum</span> (Premium)
 
 ### Target User Profile
 - Power users with multiple income sources
@@ -150,16 +150,16 @@ Rationale: Balanced price point that maintains ~50% margin while remaining compe
 - Creates significant value gap from Gold (3.75x)
 
 ### Features Included
-- ✓ Everything in Gold, plus:
-- ✓ Unlimited historical data
-- ✓ Priority AI processing (faster responses)
-- ✓ Advanced AI insights and predictions
-- ✓ Spending forecasts
-- ✓ Custom category creation
-- ✓ Multi-account household sharing
-- ✓ API access for integrations
-- ✓ Early access to new features
-- ✓ Priority customer support
+- <span style="color:#16a34a">✓</span> Everything in <span style="color:#f59e0b">Gold</span>, plus:
+- <span style="color:#16a34a">✓</span> Unlimited historical data
+- <span style="color:#16a34a">✓</span> Priority AI processing (faster responses)
+- <span style="color:#16a34a">✓</span> Advanced AI insights and predictions
+- <span style="color:#16a34a">✓</span> Spending forecasts
+- <span style="color:#16a34a">✓</span> Custom category creation
+- <span style="color:#16a34a">✓</span> Multi-account household sharing
+- <span style="color:#16a34a">✓</span> API access for integrations
+- <span style="color:#16a34a">✓</span> Early access to new features
+- <span style="color:#16a34a">✓</span> Priority customer support
 
 ### Pricing Recommendation
 | Period | Price |
@@ -170,44 +170,44 @@ Rationale: Balanced price point that maintains ~50% margin while remaining compe
 ### Cost Analysis
 | Item | Amount |
 |------|--------|
-| Receipts: 150 × $0.0802 | $12.03 |
-| Chat: 500 × $0.0003 | $0.15 |
-| **Total Variable Cost** | **$12.18/month** |
-| Revenue (at $17.49 avg) | $17.49 |
-| **Gross Profit** | **$5.31** |
-| **Gross Margin** | **30.4%** |
+| Receipts: 150 × $0.0802 | <span style="color:#ef4444">$12.03</span> |
+| Chat: 500 × $0.0003 | <span style="color:#ef4444">$0.15</span> |
+| **Total Variable Cost** | <span style="color:#ef4444">**$12.18/month**</span> |
+| Revenue (at $17.49 avg) | <span style="color:#16a34a">$17.49</span> |
+| <span style="color:#16a34a">**Gross Profit**</span> | <span style="color:#16a34a">**$5.31**</span> |
+| <span style="color:#16a34a">**Gross Margin**</span> | <span style="color:#f59e0b">**30.4%**</span> |
 
 ### Margin Analysis
 | Price | Margin | Profit |
 |-------|--------|--------|
-| $14.99 | 18.7% | $2.81 |
-| $17.49 | 30.4% | $5.31 |
-| $19.99 | 39.1% | $7.81 |
+| $14.99 | <span style="color:#ef4444">18.7%</span> | $2.81 |
+| $17.49 | <span style="color:#f59e0b">30.4%</span> | <span style="color:#16a34a">$5.31</span> |
+| $19.99 | <span style="color:#16a34a">39.1%</span> | <span style="color:#16a34a">$7.81</span> |
 
-**RECOMMENDED PRICE: $17.49/month**
+<span style="background-color:#dbeafe; padding: 8px; display: block; border-left: 4px solid #3b82f6;">**RECOMMENDED PRICE: <span style="color:#a855f7">$17.49/month</span>**</span>
 
-**WARNING:** At $14.99, margins become thin (18.7%). Consider limiting Platinum features or raising minimum to $16.99.
+<span style="background-color:#fee2e2; padding: 8px; display: block; border-left: 4px solid #ef4444;">**WARNING:** At $14.99, margins become thin (<span style="color:#ef4444">18.7%</span>). Consider limiting <span style="color:#a855f7">Platinum</span> features or raising minimum to $16.99.</span>
 
 ---
 
 ## Tier Comparison Summary
 
-| Feature | SILVER | GOLD | PLATINUM |
+| Feature | <span style="color:#6b7280">**SILVER**</span> | <span style="color:#f59e0b">**GOLD**</span> | <span style="color:#a855f7">**PLATINUM**</span> |
 |---------|--------|------|----------|
-| Price (Monthly) | FREE | $6.49 | $17.49 |
-| Price (Annual) | FREE | $54.99 | $149.99 |
+| Price (Monthly) | <span style="color:#6b7280">FREE</span> | <span style="color:#f59e0b">$6.49</span> | <span style="color:#a855f7">$17.49</span> |
+| Price (Annual) | <span style="color:#6b7280">FREE</span> | <span style="color:#f59e0b">$54.99</span> | <span style="color:#a855f7">$149.99</span> |
 | Receipt Uploads | 10 | 40 | 150 |
 | Chat Messages | 50 | 200 | 500 |
-| Basic Analytics | ✓ | ✓ | ✓ |
-| Advanced Analytics | ✗ | ✓ | ✓ |
+| Basic Analytics | <span style="color:#16a34a">✓</span> | <span style="color:#16a34a">✓</span> | <span style="color:#16a34a">✓</span> |
+| Advanced Analytics | <span style="color:#ef4444">✗</span> | <span style="color:#16a34a">✓</span> | <span style="color:#16a34a">✓</span> |
 | Historical Data | 3 months | 12 months | Unlimited |
-| Export (CSV/PDF) | ✗ | ✓ | ✓ |
-| Priority Processing | ✗ | ✗ | ✓ |
-| API Access | ✗ | ✗ | ✓ |
-| Custom Categories | ✗ | ✗ | ✓ |
-| Ad-Free | ✗ | ✓ | ✓ |
-| Variable Cost/User | $0.82 | $3.27 | $12.18 |
-| Gross Margin | -100% | 49.6% | 30.4% |
+| Export (CSV/PDF) | <span style="color:#ef4444">✗</span> | <span style="color:#16a34a">✓</span> | <span style="color:#16a34a">✓</span> |
+| Priority Processing | <span style="color:#ef4444">✗</span> | <span style="color:#ef4444">✗</span> | <span style="color:#16a34a">✓</span> |
+| API Access | <span style="color:#ef4444">✗</span> | <span style="color:#ef4444">✗</span> | <span style="color:#16a34a">✓</span> |
+| Custom Categories | <span style="color:#ef4444">✗</span> | <span style="color:#ef4444">✗</span> | <span style="color:#16a34a">✓</span> |
+| Ad-Free | <span style="color:#ef4444">✗</span> | <span style="color:#16a34a">✓</span> | <span style="color:#16a34a">✓</span> |
+| Variable Cost/User | <span style="color:#ef4444">$0.82</span> | <span style="color:#ef4444">$3.27</span> | <span style="color:#ef4444">$12.18</span> |
+| Gross Margin | <span style="color:#ef4444">-100%</span> | <span style="color:#16a34a">49.6%</span> | <span style="color:#f59e0b">30.4%</span> |
 
 ---
 
@@ -216,62 +216,62 @@ Rationale: Balanced price point that maintains ~50% margin while remaining compe
 ### Scenario: 10,000 Monthly Active Users
 
 **Assumed Distribution:**
-- Silver: 70% (7,000 users)
-- Gold: 25% (2,500 users)
-- Platinum: 5% (500 users)
+- <span style="color:#6b7280">Silver</span>: 70% (7,000 users)
+- <span style="color:#f59e0b">Gold</span>: 25% (2,500 users)
+- <span style="color:#a855f7">Platinum</span>: 5% (500 users)
 
 **Monthly Revenue:**
 | Tier | Users | Revenue |
 |------|-------|---------|
-| Silver | 7,000 × $0.00 | $0 |
-| Gold | 2,500 × $6.49 | $16,225 |
-| Platinum | 500 × $17.49 | $8,745 |
-| **TOTAL** | | **$24,970/month** |
+| <span style="color:#6b7280">Silver</span> | 7,000 × $0.00 | $0 |
+| <span style="color:#f59e0b">Gold</span> | 2,500 × $6.49 | <span style="color:#16a34a">$16,225</span> |
+| <span style="color:#a855f7">Platinum</span> | 500 × $17.49 | <span style="color:#16a34a">$8,745</span> |
+| **TOTAL** | | <span style="color:#16a34a">**$24,970/month**</span> |
 
 **Monthly Variable Costs:**
 | Tier | Users | Cost |
 |------|-------|------|
-| Silver | 7,000 × $0.82 | $5,740 |
-| Gold | 2,500 × $3.27 | $8,175 |
-| Platinum | 500 × $12.18 | $6,090 |
-| **TOTAL** | | **$20,005/month** |
+| <span style="color:#6b7280">Silver</span> | 7,000 × $0.82 | <span style="color:#ef4444">$5,740</span> |
+| <span style="color:#f59e0b">Gold</span> | 2,500 × $3.27 | <span style="color:#ef4444">$8,175</span> |
+| <span style="color:#a855f7">Platinum</span> | 500 × $12.18 | <span style="color:#ef4444">$6,090</span> |
+| **TOTAL** | | <span style="color:#ef4444">**$20,005/month**</span> |
 
-**Monthly Fixed Costs:** ~$100/month
+**Monthly Fixed Costs:** <span style="color:#ef4444">~$100/month</span>
 
-**MONTHLY PROFIT: $4,865**
-**NET MARGIN: 19.5%**
-**ANNUAL REVENUE: $299,640**
-**ANNUAL PROFIT: $58,380**
+<span style="color:#16a34a">**MONTHLY PROFIT: $4,865**</span>
+<span style="color:#16a34a">**NET MARGIN: 19.5%**</span>
+<span style="color:#16a34a">**ANNUAL REVENUE: $299,640**</span>
+<span style="color:#16a34a">**ANNUAL PROFIT: $58,380**</span>
 
 ---
 
 ## Key Insights & Recommendations
 
-### 1. GOLD TIER IS THE PROFIT ENGINE
-Gold tier delivers 49.6% gross margin - the highest of any paid tier. Focus marketing and upgrade prompts on Silver-to-Gold conversions.
+### 1. <span style="color:#3b82f6">GOLD TIER IS THE PROFIT ENGINE</span>
+<span style="color:#f59e0b">Gold</span> tier delivers <span style="color:#16a34a">49.6% gross margin</span> - the highest of any paid tier. Focus marketing and upgrade prompts on <span style="color:#6b7280">Silver</span>-to-<span style="color:#f59e0b">Gold</span> conversions.
 
-### 2. SILVER TIER COST IS ACCEPTABLE
-At $0.82/user/month, the free tier is a reasonable customer acquisition cost. For context, typical mobile app CPA ranges from $1-5.
+### 2. <span style="color:#3b82f6">SILVER TIER COST IS ACCEPTABLE</span>
+At <span style="color:#ef4444">$0.82/user/month</span>, the free tier is a reasonable customer acquisition cost. For context, typical mobile app CPA ranges from $1-5.
 
-### 3. PLATINUM MARGINS NEED MONITORING
-The 30.4% margin on Platinum is acceptable but thin. If Veryfi costs increase or usage exceeds estimates, consider price increases.
+### 3. <span style="color:#3b82f6">PLATINUM MARGINS NEED MONITORING</span>
+The <span style="color:#f59e0b">30.4% margin</span> on <span style="color:#a855f7">Platinum</span> is acceptable but thin. If Veryfi costs increase or usage exceeds estimates, consider price increases.
 
-### 4. IMPLEMENT OVERAGE PRICING
+### 4. <span style="color:#3b82f6">IMPLEMENT OVERAGE PRICING</span>
 Allow users to purchase additional receipts at $0.15-0.20 each. This captures revenue from users at tier boundaries without forcing upgrades.
 
-**Example:** Gold user who needs 50 receipts
-- Tier upgrade to Platinum: +$11.00/month (poor value)
-- 10 extra receipts at $0.15: +$1.50/month (good value)
-- Your margin on overage: 87% vs 30% on Platinum upgrade
+**Example:** <span style="color:#f59e0b">Gold</span> user who needs 50 receipts
+- Tier upgrade to <span style="color:#a855f7">Platinum</span>: +$11.00/month <span style="color:#ef4444">(poor value)</span>
+- 10 extra receipts at $0.15: +$1.50/month <span style="color:#16a34a">(good value)</span>
+- Your margin on overage: <span style="color:#16a34a">87%</span> vs 30% on <span style="color:#a855f7">Platinum</span> upgrade
 
-### 5. ANNUAL PRICING IS CRITICAL
+### 5. <span style="color:#3b82f6">ANNUAL PRICING IS CRITICAL</span>
 Offer 30-33% discount for annual subscriptions to:
 - Improve cash flow predictability
 - Reduce churn (users less likely to cancel annual)
 - Lock in revenue before potential price increases
 
-### 6. WATCH USAGE PATTERNS
-Track actual usage vs. limits. If average Gold user only scans 20 receipts, consider lowering Gold limit to 30 and raising margin.
+### 6. <span style="color:#3b82f6">WATCH USAGE PATTERNS</span>
+Track actual usage vs. limits. If average <span style="color:#f59e0b">Gold</span> user only scans 20 receipts, consider lowering <span style="color:#f59e0b">Gold</span> limit to 30 and raising margin.
 
 ---
 
@@ -307,10 +307,10 @@ Track actual usage vs. limits. If average Gold user only scans 20 receipts, cons
 
 | Risk | Likelihood | Impact | Mitigation |
 |------|------------|--------|------------|
-| Veryfi price increase | Medium | High | Negotiate long-term contract |
-| Low conversion rates | Medium | High | Enhance free tier value walls |
-| High Platinum usage | Medium | Medium | Monitor usage, consider limits |
-| Competitive pressure | Medium | Medium | Differentiate on AI quality |
+| Veryfi price increase | <span style="color:#f59e0b">Medium</span> | <span style="color:#ef4444">High</span> | Negotiate long-term contract |
+| Low conversion rates | <span style="color:#f59e0b">Medium</span> | <span style="color:#ef4444">High</span> | Enhance free tier value walls |
+| High Platinum usage | <span style="color:#f59e0b">Medium</span> | <span style="color:#f59e0b">Medium</span> | Monitor usage, consider limits |
+| Competitive pressure | <span style="color:#f59e0b">Medium</span> | <span style="color:#f59e0b">Medium</span> | Differentiate on AI quality |
 
 ### API Alternatives (Risk Mitigation)
 
@@ -327,18 +327,18 @@ Track actual usage vs. limits. If average Gold user only scans 20 receipts, cons
 
 ### Recommended Tier Pricing
 
-| | SILVER | GOLD | PLATINUM |
+| | <span style="color:#6b7280">**SILVER**</span> | <span style="color:#f59e0b">**GOLD**</span> | <span style="color:#a855f7">**PLATINUM**</span> |
 |---|--------|------|----------|
-| **Price** | FREE | $6.49/mo | $17.49/mo |
-| | | $54.99/yr | $149.99/yr |
+| **Price** | <span style="color:#6b7280">FREE</span> | <span style="color:#f59e0b">$6.49/mo</span> | <span style="color:#a855f7">$17.49/mo</span> |
+| | | <span style="color:#f59e0b">$54.99/yr</span> | <span style="color:#a855f7">$149.99/yr</span> |
 | **Limits** | 10 receipts | 40 receipts | 150 receipts |
 | | 50 chats | 200 chats | 500 chats |
 
 ### Expected Outcomes (at 10K MAU)
-- Monthly Revenue: $24,970
-- Monthly Profit: $4,865
-- Net Margin: 19.5%
-- Annual Revenue: $299,640
+- Monthly Revenue: <span style="color:#16a34a">$24,970</span>
+- Monthly Profit: <span style="color:#16a34a">$4,865</span>
+- Net Margin: <span style="color:#16a34a">19.5%</span>
+- Annual Revenue: <span style="color:#16a34a">$299,640</span>
 
 ### Success Metrics to Track
 - Silver → Gold conversion rate (target: 25%+)

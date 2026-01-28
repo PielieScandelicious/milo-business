@@ -45,7 +45,7 @@ Each receipt upload triggers the following API calls:
 - **Cost:** Included in Railway hosting
 - **Operations:** Receipt record creation, transaction records, status updates
 
-### **TOTAL COST PER RECEIPT UPLOAD: $0.0802**
+### <span style="color:#ef4444">**TOTAL COST PER RECEIPT UPLOAD: $0.0802**</span>
 
 ---
 
@@ -53,12 +53,12 @@ Each receipt upload triggers the following API calls:
 
 | Component | Cost per Receipt | % of Total |
 |-----------|------------------|------------|
-| Veryfi OCR | $0.0800 | 99.75% |
-| Gemini Categorization | $0.0002 | 0.25% |
+| <span style="color:#ef4444">Veryfi OCR</span> | <span style="color:#ef4444">$0.0800</span> | <span style="color:#ef4444">99.75%</span> |
+| <span style="color:#16a34a">Gemini Categorization</span> | <span style="color:#16a34a">$0.0002</span> | 0.25% |
 | Database Operations | $0.0000 | 0.00% |
-| **TOTAL** | **$0.0802** | **100.00%** |
+| **TOTAL** | <span style="color:#ef4444">**$0.0802**</span> | **100.00%** |
 
-**CRITICAL INSIGHT:** Veryfi OCR dominates the cost structure. Any cost optimization strategy must focus on reducing OCR calls or negotiating volume pricing with Veryfi.
+<span style="background-color:#fee2e2; padding: 8px; display: block; border-left: 4px solid #ef4444;">**CRITICAL INSIGHT:** Veryfi OCR dominates the cost structure. Any cost optimization strategy must focus on reducing OCR calls or negotiating volume pricing with Veryfi.</span>
 
 ---
 
@@ -76,14 +76,14 @@ Each chat message in the V2 API uses Gemini 2.0 Flash:
 - Output: 500 tokens × ($0.40 / 1,000,000) = $0.0002
 - **Total:** $0.0003 per message
 
-### **TOTAL COST PER CHAT MESSAGE: $0.0003**
+### <span style="color:#16a34a">**TOTAL COST PER CHAT MESSAGE: $0.0003**</span>
 
 ### V1 vs V2 Comparison
 | API Version | Model | Cost per Message |
 |-------------|-------|------------------|
-| V1 API | Claude Sonnet 4 | ~$0.0045 |
-| V2 API | Gemini 2.0 Flash | ~$0.0003 |
-| **SAVINGS** | | **93% reduction** |
+| V1 API | Claude Sonnet 4 | <span style="color:#ef4444">~$0.0045</span> |
+| V2 API | Gemini 2.0 Flash | <span style="color:#16a34a">~$0.0003</span> |
+| <span style="color:#16a34a">**SAVINGS**</span> | | <span style="color:#16a34a">**93% reduction**</span> |
 
 ---
 
@@ -190,7 +190,7 @@ Included with Railway hosting - No additional cost
 | 100,000 | 100M | 50M | $30.00 |
 | 500,000 | 500M | 250M | $150.00 |
 
-**KEY INSIGHT:** Gemini costs are negligible compared to Veryfi. Even at massive scale (500K messages/month), the cost is only $150 - less than 200 receipt uploads.
+<span style="background-color:#dcfce7; padding: 8px; display: block; border-left: 4px solid #22c55e;">**KEY INSIGHT:** Gemini costs are negligible compared to Veryfi. Even at massive scale (500K messages/month), the cost is only <span style="color:#16a34a">$150</span> - less than 200 receipt uploads.</span>
 
 ---
 
@@ -227,7 +227,7 @@ Included with Railway hosting - No additional cost
 | Firebase Storage | $10.00 |
 | **Total** | **$25.00** |
 
-### **TOTAL MONTHLY COST (1K users): $1,502.27**
+### <span style="color:#ef4444">**TOTAL MONTHLY COST (1K users): $1,502.27**</span>
 
 ---
 
@@ -250,8 +250,8 @@ Included with Railway hosting - No additional cost
 | Firebase Storage | $50.00 |
 | **Total** | **$100.00** |
 
-### **TOTAL MONTHLY COST (10K users): $11,936.46**
-### **Cost per user: $1.19/month**
+### <span style="color:#ef4444">**TOTAL MONTHLY COST (10K users): $11,936.46**</span>
+### <span style="color:#16a34a">**Cost per user: $1.19/month**</span>
 
 ---
 
@@ -274,36 +274,36 @@ Included with Railway hosting - No additional cost
 | Firebase Storage | $500.00 |
 | **Total** | **$1,275.00** |
 
-### **TOTAL MONTHLY COST (100K users): $97,865.30**
-### **Cost per user: $0.98/month**
+### <span style="color:#ef4444">**TOTAL MONTHLY COST (100K users): $97,865.30**</span>
+### <span style="color:#16a34a">**Cost per user: $0.98/month**</span>
 
-**ECONOMIES OF SCALE:** Cost per user decreases from $1.50 at 1K users to $0.98 at 100K users - a 35% reduction driven primarily by Veryfi volume discounts.
+<span style="background-color:#dcfce7; padding: 8px; display: block; border-left: 4px solid #22c55e;">**ECONOMIES OF SCALE:** Cost per user decreases from $1.50 at 1K users to <span style="color:#16a34a">$0.98 at 100K users</span> - a <span style="color:#16a34a">35% reduction</span> driven primarily by Veryfi volume discounts.</span>
 
 ---
 
 ## Section 8: Cost Optimization Strategies
 
-### 1. VERYFI VOLUME NEGOTIATION
-- **Potential Savings:** 20-35% on largest cost component
+### 1. <span style="color:#3b82f6">VERYFI VOLUME NEGOTIATION</span>
+- **Potential Savings:** <span style="color:#16a34a">20-35%</span> on largest cost component
 - **Action:** Contact Veryfi at api@veryfi.com for enterprise pricing
 
-### 2. RECEIPT CACHING/DEDUPLICATION
+### 2. <span style="color:#3b82f6">RECEIPT CACHING/DEDUPLICATION</span>
 - **Current:** Duplicate detection already implemented
 - **Enhancement:** Add fuzzy matching to catch near-duplicates
-- **Potential Savings:** 5-10% reduction in OCR calls
+- **Potential Savings:** <span style="color:#16a34a">5-10% reduction</span> in OCR calls
 
-### 3. TIERED RATE LIMITS
+### 3. <span style="color:#3b82f6">TIERED RATE LIMITS</span>
 - **Current:** Flat 15 receipts/month for all users
-- **Proposed:** 10/40/150 by tier
+- **Proposed:** <span style="color:#6b7280">10</span>/<span style="color:#f59e0b">40</span>/<span style="color:#a855f7">150</span> by tier
 - **Impact:** Better cost allocation to revenue-generating users
 
-### 4. GEMINI FREE TIER UTILIZATION
+### 4. <span style="color:#3b82f6">GEMINI FREE TIER UTILIZATION</span>
 - **Strategy:** Use free tier for low-priority requests
 - **Limitation:** Rate limits and data usage policies apply
 
-### 5. ANNUAL COMMITMENT DISCOUNTS
+### 5. <span style="color:#3b82f6">ANNUAL COMMITMENT DISCOUNTS</span>
 - **Veryfi:** 12-month commit saves $0.01/document
-- **At 100K docs/month:** $1,000/month savings
+- **At 100K docs/month:** <span style="color:#16a34a">$1,000/month savings</span>
 
 ---
 

@@ -27,26 +27,30 @@
 
 | User Scale | Monthly Cost | Per-User Cost |
 |------------|--------------|---------------|
-| 100 Users | $125 - $180 | $1.25 - $1.80 |
-| 1,000 Users | $220 - $450 | $0.22 - $0.45 |
-| 10,000 Users | $1,200 - $2,500 | $0.12 - $0.25 |
-| 50,000 Users | $5,500 - $12,000 | $0.11 - $0.24 |
+| 100 Users | <span style="color:#ef4444">$125 - $180</span> | $1.25 - $1.80 |
+| 1,000 Users | <span style="color:#ef4444">$220 - $450</span> | $0.22 - $0.45 |
+| 10,000 Users | <span style="color:#ef4444">$1,200 - $2,500</span> | $0.12 - $0.25 |
+| 50,000 Users | <span style="color:#ef4444">$5,500 - $12,000</span> | $0.11 - $0.24 |
 
 ### Key Cost Drivers (in order of impact)
 
-1. **Veryfi OCR API** - Largest variable cost (~60% of variable costs)
-2. **Railway Hosting** - Primary infrastructure cost
-3. **Anthropic Claude API** - Chat feature (V1 only)
-4. **Google Gemini API** - Very cost-effective for categorization
-5. **Firebase Authentication** - Free up to 50K MAUs
+1. <span style="color:#ef4444">**Veryfi OCR API**</span> - Largest variable cost (~60% of variable costs)
+2. <span style="color:#f59e0b">**Railway Hosting**</span> - Primary infrastructure cost
+3. <span style="color:#f59e0b">**Anthropic Claude API**</span> - Chat feature (V1 only)
+4. <span style="color:#16a34a">**Google Gemini API**</span> - Very cost-effective for categorization
+5. <span style="color:#16a34a">**Firebase Authentication**</span> - Free up to 50K MAUs
 
 ### Critical Insights
 
-- **Veryfi OCR is your #1 cost driver** - At ~$0.08/receipt, this dominates variable costs
-- **Rate limiting is crucial** - Your 15 receipts/30 days limit is essential for cost control
-- **Chat costs are manageable** - 100 messages/30 days limit helps control AI costs
-- **Firebase is essentially free** - Google Sign-In only means no SMS costs
-- **Apple takes 15-30%** - Factor App Store commission into subscription pricing
+<span style="background-color:#fee2e2; padding: 8px; display: block; border-left: 4px solid #ef4444; margin-bottom: 8px;">**Veryfi OCR is your #1 cost driver** - At ~<span style="color:#ef4444">$0.08/receipt</span>, this dominates variable costs</span>
+
+<span style="background-color:#dbeafe; padding: 8px; display: block; border-left: 4px solid #3b82f6; margin-bottom: 8px;">**Rate limiting is crucial** - Your 15 receipts/30 days limit is essential for cost control</span>
+
+<span style="background-color:#dcfce7; padding: 8px; display: block; border-left: 4px solid #22c55e; margin-bottom: 8px;">**Chat costs are manageable** - 100 messages/30 days limit helps control AI costs</span>
+
+<span style="background-color:#dcfce7; padding: 8px; display: block; border-left: 4px solid #22c55e; margin-bottom: 8px;">**Firebase is essentially free** - Google Sign-In only means no SMS costs</span>
+
+<span style="background-color:#fef3c7; padding: 8px; display: block; border-left: 4px solid #f59e0b;">**Apple takes 15-30%** - Factor App Store commission into subscription pricing</span>
 
 ---
 
@@ -192,13 +196,13 @@
 
 | Cost Category | Low Estimate | High Estimate |
 |---------------|--------------|---------------|
-| Railway (Pro) | $20 | $30 |
-| Veryfi OCR | $60 | $120 |
-| Gemini API | $0.13 | $0.25 |
-| Claude API (V1 chat) | $34 | $68 |
-| Firebase | $0 | $0 |
+| Railway (Pro) | <span style="color:#ef4444">$20</span> | <span style="color:#ef4444">$30</span> |
+| Veryfi OCR | <span style="color:#ef4444">$60</span> | <span style="color:#ef4444">$120</span> |
+| Gemini API | <span style="color:#16a34a">$0.13</span> | <span style="color:#16a34a">$0.25</span> |
+| Claude API (V1 chat) | <span style="color:#ef4444">$34</span> | <span style="color:#ef4444">$68</span> |
+| Firebase | <span style="color:#16a34a">$0</span> | <span style="color:#16a34a">$0</span> |
 | Apple Developer (monthly) | $8.25 | $8.25 |
-| **TOTAL** | **$122.38** | **$226.50** |
+| <span style="color:#ef4444">**TOTAL**</span> | <span style="color:#ef4444">**$122.38**</span> | <span style="color:#ef4444">**$226.50**</span> |
 | **Per User** | **$1.22** | **$2.27** |
 
 ### Scenario B: 1,000 Monthly Active Users (Growth Phase)
@@ -261,7 +265,7 @@
 | Mid Cost | $1.50/user | 546 paying users | +$2,740 profit |
 | High Cost | $2.00/user | 893 paying users | +$2,240 profit |
 
-**Key Insight:** With a 35-50% conversion rate, the app becomes profitable at 1,000 total users.
+<span style="background-color:#dcfce7; padding: 8px; display: block; border-left: 4px solid #22c55e;">**Key Insight:** With a 35-50% conversion rate, the app becomes <span style="color:#16a34a">profitable at 1,000 total users</span>.</span>
 
 ---
 
@@ -269,21 +273,21 @@
 
 ### 7.1 High Impact Optimizations
 
-#### Migrate V1 Chat to V2 (Gemini)
-- **Current:** Claude Sonnet 4 at $3/$15 per million tokens
-- **Proposed:** Gemini 2.0 Flash at $0.10/$0.40 per million tokens
-- **Savings:** ~97% reduction in chat costs
-- **Impact at 10K users:** Save $3,000-$6,500/month
+#### <span style="color:#3b82f6">Migrate V1 Chat to V2 (Gemini)</span>
+- **Current:** Claude Sonnet 4 at <span style="color:#ef4444">$3/$15 per million tokens</span>
+- **Proposed:** Gemini 2.0 Flash at <span style="color:#16a34a">$0.10/$0.40 per million tokens</span>
+- **Savings:** <span style="color:#16a34a">~97% reduction in chat costs</span>
+- **Impact at 10K users:** Save <span style="color:#16a34a">$3,000-$6,500/month</span>
 
-#### Negotiate Veryfi Volume Pricing
+#### <span style="color:#3b82f6">Negotiate Veryfi Volume Pricing</span>
 - Contact Veryfi for enterprise pricing at 10K+ documents
 - Expected discount: 20-40% at scale
-- **Impact at 10K users:** Save $1,200-$4,800/month
+- **Impact at 10K users:** Save <span style="color:#16a34a">$1,200-$4,800/month</span>
 
-#### Implement Receipt Caching
+#### <span style="color:#3b82f6">Implement Receipt Caching</span>
 - Cache extracted receipt data to avoid re-processing
 - Prevent duplicate API calls for identical receipts
-- **Impact:** 5-15% reduction in Veryfi costs
+- **Impact:** <span style="color:#16a34a">5-15% reduction in Veryfi costs</span>
 
 ### 7.2 Medium Impact Optimizations
 
@@ -305,10 +309,10 @@
 
 | Risk | Likelihood | Impact | Mitigation |
 |------|------------|--------|------------|
-| Veryfi price increase | Medium | High | Negotiate long-term contract |
-| Viral growth spike | Low | High | Set hard rate limits |
-| API outages | Low | Medium | Implement retry logic |
-| Apple commission increase | Low | Medium | Diversify revenue |
+| Veryfi price increase | <span style="color:#f59e0b">Medium</span> | <span style="color:#ef4444">High</span> | Negotiate long-term contract |
+| Viral growth spike | <span style="color:#16a34a">Low</span> | <span style="color:#ef4444">High</span> | Set hard rate limits |
+| API outages | <span style="color:#16a34a">Low</span> | <span style="color:#f59e0b">Medium</span> | Implement retry logic |
+| Apple commission increase | <span style="color:#16a34a">Low</span> | <span style="color:#f59e0b">Medium</span> | Diversify revenue |
 
 ### API Alternatives (Risk Mitigation)
 

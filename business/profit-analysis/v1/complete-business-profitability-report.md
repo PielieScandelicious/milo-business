@@ -12,9 +12,9 @@ DeepmAInd operates a three-pillar revenue model for the Milo iOS personal financ
 
 | Revenue Pillar | Model | Target | % of Revenue (at scale) |
 |----------------|-------|--------|-------------------------|
-| 1. App Subscriptions | B2C SaaS | Consumers | 25-35% |
-| 2. Data Monetization | B2B DaaS | CPG/Retail | 35-45% |
-| 3. Analytics Reports | B2B | Enterprise | 25-35% |
+| <span style="color:#3b82f6">1. App Subscriptions</span> | B2C SaaS | Consumers | 25-35% |
+| <span style="color:#3b82f6">2. Data Monetization</span> | B2B DaaS | CPG/Retail | <span style="color:#16a34a">35-45%</span> |
+| <span style="color:#3b82f6">3. Analytics Reports</span> | B2B | Enterprise | 25-35% |
 
 ### Unique Value Proposition
 - Only receipt-scanning app with AI health scoring
@@ -74,11 +74,11 @@ DeepmAInd operates a three-pillar revenue model for the Milo iOS personal financ
 
 | | Monthly | Annual | Margin |
 |---|---------|--------|--------|
-| Total Revenue | $44,224 | $530,694 | |
-| Less: Variable Costs | -$4,971 | -$59,646 | |
-| **GROSS PROFIT** | $39,253 | $471,048 | 88.8% |
-| Less: Fixed Costs | -$10,875 | -$130,500 | |
-| **OPERATING PROFIT (EBITDA)** | $28,378 | $340,548 | 64.2% |
+| Total Revenue | <span style="color:#16a34a">$44,224</span> | <span style="color:#16a34a">$530,694</span> | |
+| Less: Variable Costs | <span style="color:#ef4444">-$4,971</span> | <span style="color:#ef4444">-$59,646</span> | |
+| <span style="color:#16a34a">**GROSS PROFIT**</span> | <span style="color:#16a34a">$39,253</span> | <span style="color:#16a34a">$471,048</span> | <span style="color:#16a34a">88.8%</span> |
+| Less: Fixed Costs | <span style="color:#ef4444">-$10,875</span> | <span style="color:#ef4444">-$130,500</span> | |
+| <span style="color:#16a34a">**OPERATING PROFIT (EBITDA)**</span> | <span style="color:#16a34a">**$28,378**</span> | <span style="color:#16a34a">**$340,548**</span> | <span style="color:#16a34a">**64.2%**</span> |
 
 ---
 
@@ -97,11 +97,11 @@ DeepmAInd operates a three-pillar revenue model for the Milo iOS personal financ
 
 | | Monthly | Annual | Margin |
 |---|---------|--------|--------|
-| Total Revenue | $351,123 | $4,213,470 | |
-| Less: Variable Costs | -$24,638 | -$295,650 | |
-| **GROSS PROFIT** | $326,485 | $3,917,820 | 93.0% |
-| Less: Fixed Costs | -$73,800 | -$885,600 | |
-| **OPERATING PROFIT (EBITDA)** | $252,685 | $3,032,220 | 72.0% |
+| Total Revenue | <span style="color:#16a34a">$351,123</span> | <span style="color:#16a34a">$4,213,470</span> | |
+| Less: Variable Costs | <span style="color:#ef4444">-$24,638</span> | <span style="color:#ef4444">-$295,650</span> | |
+| <span style="color:#16a34a">**GROSS PROFIT**</span> | <span style="color:#16a34a">$326,485</span> | <span style="color:#16a34a">$3,917,820</span> | <span style="color:#16a34a">93.0%</span> |
+| Less: Fixed Costs | <span style="color:#ef4444">-$73,800</span> | <span style="color:#ef4444">-$885,600</span> | |
+| <span style="color:#16a34a">**OPERATING PROFIT (EBITDA)**</span> | <span style="color:#16a34a">**$252,685**</span> | <span style="color:#16a34a">**$3,032,220**</span> | <span style="color:#16a34a">**72.0%**</span> |
 
 ---
 
@@ -120,11 +120,11 @@ DeepmAInd operates a three-pillar revenue model for the Milo iOS personal financ
 
 | | Monthly | Annual | Margin |
 |---|---------|--------|--------|
-| Total Revenue | $818,518 | $9,822,210 | |
-| Less: Variable Costs | -$65,943 | -$791,310 | |
-| **GROSS PROFIT** | $752,575 | $9,030,900 | 91.9% |
-| Less: Fixed Costs | -$171,300 | -$2,055,600 | |
-| **OPERATING PROFIT (EBITDA)** | $581,275 | $6,975,300 | 71.0% |
+| Total Revenue | <span style="color:#16a34a">$818,518</span> | <span style="color:#16a34a">$9,822,210</span> | |
+| Less: Variable Costs | <span style="color:#ef4444">-$65,943</span> | <span style="color:#ef4444">-$791,310</span> | |
+| <span style="color:#16a34a">**GROSS PROFIT**</span> | <span style="color:#16a34a">$752,575</span> | <span style="color:#16a34a">$9,030,900</span> | <span style="color:#16a34a">91.9%</span> |
+| Less: Fixed Costs | <span style="color:#ef4444">-$171,300</span> | <span style="color:#ef4444">-$2,055,600</span> | |
+| <span style="color:#16a34a">**OPERATING PROFIT (EBITDA)**</span> | <span style="color:#16a34a">**$581,275**</span> | <span style="color:#16a34a">**$6,975,300**</span> | <span style="color:#16a34a">**71.0%**</span> |
 
 ---
 
@@ -149,7 +149,7 @@ DeepmAInd operates a three-pillar revenue model for the Milo iOS personal financ
 | Data Monetization | 45.1% | 53.4% | 66.8% | ↑ |
 | Analytics Reports | 6.8% | 17.8% | 10.3% | → |
 
-**KEY INSIGHT:** Data monetization becomes the dominant revenue stream by Year 2, contributing over half of total revenue. This shifts the company profile from "consumer app" to "data intelligence platform."
+<span style="background-color:#dbeafe; padding: 8px; display: block; border-left: 4px solid #3b82f6;">**KEY INSIGHT:** Data monetization becomes the dominant revenue stream by Year 2, contributing <span style="color:#16a34a">over half of total revenue</span>. This shifts the company profile from "consumer app" to "data intelligence platform."</span>
 
 ---
 
@@ -171,10 +171,10 @@ Silver users generate negative LTV due to API costs, but serve as conversion fun
 
 | Segment | LTV:CAC | Benchmark | Assessment |
 |---------|---------|-----------|------------|
-| Gold Subscribers | 3.1:1 | 3:1 | HEALTHY |
-| Platinum Subscribers | 5.4:1 | 3:1 | EXCELLENT |
-| Standard B2B Clients | 10:1 | 3:1 | EXCEPTIONAL |
-| Enterprise B2B Clients | 15:1 | 3:1 | EXCEPTIONAL |
+| <span style="color:#f59e0b">Gold</span> Subscribers | 3.1:1 | 3:1 | <span style="color:#16a34a">HEALTHY</span> |
+| <span style="color:#a855f7">Platinum</span> Subscribers | 5.4:1 | 3:1 | <span style="color:#16a34a">**EXCELLENT**</span> |
+| Standard B2B Clients | 10:1 | 3:1 | <span style="color:#16a34a">**EXCEPTIONAL**</span> |
+| Enterprise B2B Clients | 15:1 | 3:1 | <span style="color:#16a34a">**EXCEPTIONAL**</span> |
 
 ---
 
@@ -190,7 +190,7 @@ Silver users generate negative LTV due to API costs, but serve as conversion fun
 | 70% | $7,583,333 | +$1,083,333 | $10,905,543 | +11.0% |
 | 80% | $8,666,667 | +$2,166,667 | $11,988,877 | +22.1% |
 
-**CRITICAL:** Data consent rate has 2.8x more revenue impact than paid conversion rate. Privacy-first design and clear value exchange are essential.
+<span style="background-color:#fee2e2; padding: 8px; display: block; border-left: 4px solid #ef4444;">**CRITICAL:** Data consent rate has <span style="color:#ef4444">2.8x more revenue impact</span> than paid conversion rate. Privacy-first design and clear value exchange are essential.</span>
 
 ---
 
@@ -209,37 +209,37 @@ Silver users generate negative LTV due to API costs, but serve as conversion fun
 
 | Scenario | Multiple | Y3 Revenue | Valuation | Notes |
 |----------|----------|------------|-----------|-------|
-| Conservative | 5x | $9,822,210 | $49.1M | Subscription-only |
-| Base Case | 8x | $9,822,210 | $78.6M | Data + App |
-| Optimistic | 12x | $9,822,210 | $117.9M | Data premium |
-| Strategic | 15x | $9,822,210 | $147.3M | Acquisition bid |
+| Conservative | 5x | $9,822,210 | <span style="color:#f59e0b">$49.1M</span> | Subscription-only |
+| Base Case | 8x | $9,822,210 | <span style="color:#16a34a">$78.6M</span> | Data + App |
+| Optimistic | 12x | $9,822,210 | <span style="color:#16a34a">**$117.9M**</span> | Data premium |
+| Strategic | 15x | $9,822,210 | <span style="color:#16a34a">**$147.3M**</span> | Acquisition bid |
 
 ---
 
 ## Strategic Recommendations
 
-1. **PRIORITIZE DATA CONSENT OPTIMIZATION**
+1. <span style="color:#3b82f6">**PRIORITIZE DATA CONSENT OPTIMIZATION**</span>
    - Impact: Highest revenue sensitivity
    - Actions: A/B test consent flows, develop value exchange, incentive programs
 
-2. **ACCELERATE USER GROWTH**
+2. <span style="color:#3b82f6">**ACCELERATE USER GROWTH**</span>
    - Impact: Foundation for all revenue streams
    - Actions: Referral programs, ASO optimization, strategic partnerships
 
-3. **BUILD B2B SALES EARLY**
+3. <span style="color:#3b82f6">**BUILD B2B SALES EARLY**</span>
    - Impact: Data revenue requires relationships
    - Actions: Hire experienced data sales lead by Month 6
 
-4. **INVEST IN PRIVACY INFRASTRUCTURE**
+4. <span style="color:#3b82f6">**INVEST IN PRIVACY INFRASTRUCTURE**</span>
    - Impact: Enables premium data pricing
    - Actions: $100K Year 1 investment in compliance tools
 
-5. **DEVELOP HEALTH DATA POSITIONING**
+5. <span style="color:#3b82f6">**DEVELOP HEALTH DATA POSITIONING**</span>
    - Impact: Differentiation and pricing premium
    - Actions: Marketing around wellness insights, target health industry buyers
 
-6. **NEGOTIATE VERYFI VOLUME PRICING**
-   - Impact: 20-35% OCR cost reduction
+6. <span style="color:#3b82f6">**NEGOTIATE VERYFI VOLUME PRICING**</span>
+   - Impact: <span style="color:#16a34a">20-35% OCR cost reduction</span>
    - Actions: Commit to annual volume contract at 10K MAU
 
 ---
@@ -249,25 +249,25 @@ Silver users generate negative LTV due to API costs, but serve as conversion fun
 The Milo app represents a highly profitable business opportunity with multiple revenue streams and exceptional unit economics.
 
 ### Financial Highlights
-- Year 3 Revenue: $9.8M
-- Year 3 Operating Profit: $7.0M
-- Year 3 Operating Margin: 71%
-- 3-Year Revenue CAGR: 330%
+- Year 3 Revenue: <span style="color:#16a34a">**$9.8M**</span>
+- Year 3 Operating Profit: <span style="color:#16a34a">**$7.0M**</span>
+- Year 3 Operating Margin: <span style="color:#16a34a">**71%**</span>
+- 3-Year Revenue CAGR: <span style="color:#16a34a">**330%**</span>
 
 ### Strategic Highlights
-- Data monetization becomes dominant revenue stream (67% by Year 3)
+- Data monetization becomes dominant revenue stream (<span style="color:#16a34a">67% by Year 3</span>)
 - B2B revenue provides stability and higher LTV
 - Health scoring creates unique market positioning
 - Multiple paths to exit at 8-15x revenue multiples
 
 ### Critical Success Factors
-1. Achieve 50,000+ MAU for data relevance
-2. Maintain 60%+ data consent rate
+1. Achieve <span style="color:#3b82f6">50,000+ MAU</span> for data relevance
+2. Maintain <span style="color:#3b82f6">60%+ data consent rate</span>
 3. Build B2B sales capability early
 4. Invest in privacy/compliance infrastructure
 5. Differentiate on health/wellness data
 
-**PROJECTED EXIT VALUE (YEAR 3): $78M - $147M**
+<span style="background-color:#dcfce7; padding: 12px; display: block; border-left: 4px solid #22c55e; font-size: 1.1em;">**PROJECTED EXIT VALUE (YEAR 3): <span style="color:#16a34a">$78M - $147M</span>**</span>
 
 ---
 
