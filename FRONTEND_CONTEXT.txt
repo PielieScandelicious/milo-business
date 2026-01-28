@@ -1,0 +1,282 @@
+================================================================================
+                        MILO - APPLICATION CONTEXT
+                      Research Agent Reference Document
+================================================================================
+
+OVERVIEW
+--------------------------------------------------------------------------------
+Milo is an iOS mobile application designed to help users track and
+analyze their spending through receipt scanning and AI-powered insights. The
+app features a friendly AI
+assistant named "Milo".
+
+Primary Purpose: Personal finance and spending analysis app combining automated
+receipt scanning, visual analytics, and AI-driven recommendations.
+
+
+APPLICATION TYPE
+--------------------------------------------------------------------------------
+- Platform: iOS (native)
+- Framework: SwiftUI
+- Architecture: MVVM (Model-View-ViewModel)
+- Bundle ID: com.deepmaind.Milo
+- Firebase Project ID: dobby-dd70e
+
+
+TECH STACK
+--------------------------------------------------------------------------------
+
+Frontend (iOS):
+- SwiftUI (modern declarative UI framework)
+- Swift programming language
+- StoreKit 2 (in-app purchases and subscriptions)
+
+Authentication:
+- Firebase Authentication
+- Google Sign-In integration
+- Keychain for secure token storage
+
+Backend:
+- Railway-hosted REST API
+- Production: https://scandalicious-api-production.up.railway.app
+- Non-Prod: https://scandalicious-api-non-prod.up.railway.app
+- API Version: v2
+
+External Services:
+- Firebase (Authentication, Storage)
+- Google Cloud Platform
+- Railway (API hosting)
+
+
+CORE FEATURES
+--------------------------------------------------------------------------------
+
+1. RECEIPT SCANNING & MANAGEMENT
+   - Camera-based receipt capture with quality checking
+   - Photo library import support
+   - Share Extension for uploading receipts from other apps
+   - Multipart form data upload to backend
+   - Duplicate detection with confidence scores
+   - Receipt details with transaction breakdown
+   - Rate limiting (monthly per-user limits)
+   - Health score averaging for food items
+
+2. ANALYTICS & DASHBOARD
+   - Spending trends by period (week/month/year)
+   - Category breakdown with 16+ categories
+   - Store-level analytics and spending breakdown
+   - Visual charts: donut charts, liquid gauges
+   - Transaction filtering by store, period, and category
+   - Summary views with category distribution
+
+3. AI CHAT ASSISTANT ("MILO")
+   - Streaming chat interface using Server-Sent Events (SSE)
+   - Markdown rendering with table support
+   - Conversation history management
+   - Sample prompt cards for user guidance
+   - Backend-powered AI responses
+
+4. USER MANAGEMENT
+   - Google Sign-In authentication
+   - Profile completion flow for new users
+   - Onboarding experience
+   - User preferences (name, gender)
+   - Token management for share extension
+
+5. SUBSCRIPTION SYSTEM
+   - In-app purchases (Monthly/Yearly plans)
+   - Premium feature gating
+   - Paywall system
+   - Subscription status tracking
+
+
+SPENDING CATEGORIES (16)
+--------------------------------------------------------------------------------
+The app categorizes spending into these categories:
+- Meat & Fish
+- Alcohol
+- Dairy
+- Produce
+- Bakery
+- Beverages
+- Snacks
+- Frozen
+- Pantry
+- Household
+- Personal Care
+- Baby
+- Pets
+- Pharmacy
+- Other
+- Unknown
+
+
+APP NAVIGATION STRUCTURE
+--------------------------------------------------------------------------------
+
+Tab 1: VIEW (chart.pie.fill icon)
+├── Overview and analytics dashboard
+├── Receipt history
+├── Store breakdowns
+└── Spending trends
+
+Tab 2: SCAN (qrcode.viewfinder icon)
+├── Custom camera view for receipt capture
+├── Receipt upload functionality
+├── Upload success confirmation
+├── Recent receipt details
+└── Saved receipts list
+
+Tab 3: MILO (sparkles icon)
+├── AI chat assistant interface
+├── Spending insights and recommendations
+├── Markdown-formatted responses
+└── Conversation history
+
+
+PROJECT STRUCTURE
+--------------------------------------------------------------------------------
+
+Scandalicious/
+├── App/
+│   ├── DobbyApp.swift              (main app entry point)
+│   └── DobbyApp+ShareExtension.swift
+├── Config/
+│   └── env.swift                   (API configuration)
+├── Models/
+│   ├── UserProfile.swift
+│   ├── ReceiptModels.swift
+│   ├── TransactionModel.swift
+│   ├── AnalyticsModels.swift
+│   └── StoreBreakdownModel.swift
+├── Services/
+│   ├── AnalyticsAPIService.swift
+│   ├── ReceiptUploadService.swift
+│   ├── MiloAIChatService.swift
+│   ├── ProfileAPIService.swift
+│   ├── SubscriptionManager.swift
+│   ├── InsightService.swift
+│   ├── RateLimitManager.swift
+│   ├── ReceiptQualityChecker.swift
+│   └── KeychainHelper.swift
+├── ViewModels/
+│   ├── AuthenticationManager.swift
+│   ├── AnalyticsViewModel.swift
+│   ├── ReceiptsViewModel.swift
+│   └── ReceiptUploadViewModel.swift
+├── Views/
+│   ├── Main/       (ContentView, OverviewView, ProfileView)
+│   ├── Auth/       (LoginView, PaywallView)
+│   ├── Receipt/    (scanning, upload, details, transactions)
+│   ├── Transaction/ (display, list, table views)
+│   ├── Store/      (store breakdown and detail)
+│   ├── Chat/       (MiloAIChatView)
+│   ├── Components/ (reusable UI components)
+│   └── Onboarding/
+├── Extensions/
+│   ├── AnalyticsHelpers.swift
+│   ├── CategoryColorExtension.swift
+│   └── HealthScoreHelpers.swift
+└── Resources/
+
+ScandaliciousShareExtension/        (iOS Share Extension target)
+
+
+API ENDPOINTS (v2)
+--------------------------------------------------------------------------------
+Base: /api/v2
+
+Authentication & Profile:
+- /profile                    - User profile management
+
+Receipts:
+- /receipts/upload            - Receipt image upload
+- /receipts                   - Receipt retrieval
+
+Analytics:
+- /analytics/trends           - Spending trends
+- /analytics/categories       - Category breakdown
+- /analytics/summary          - Summary statistics
+
+Transactions:
+- /transactions               - Transaction data
+
+Chat:
+- /chat/                      - Send chat messages
+- /chat/stream                - Streaming chat responses (SSE)
+
+Rate Limiting:
+- /rate-limit                 - Check upload rate limits
+
+
+KEY DATA MODELS
+--------------------------------------------------------------------------------
+
+UserProfile:
+- User information
+- Gender preference
+- Profile completion status
+- First name
+
+Receipt / ReceiptUploadResponse:
+- Receipt ID
+- Store name
+- Items and transactions
+- Total amount
+- Health score
+- Processing warnings
+- Duplicate detection info
+
+Transaction:
+- Individual purchase items
+- Category classification
+- Price and quantity
+- Health score
+
+AnalyticsCategory:
+- Category identifier
+- Total spending
+- Transaction count
+- Icon representation
+
+
+SECURITY & AUTHENTICATION
+--------------------------------------------------------------------------------
+- Firebase Authentication with Google Sign-In
+- JWT token management
+- Keychain storage for sensitive data
+- App Group sharing for Share Extension
+- Token refresh on app state changes
+
+App Group: group.com.deepmaind.scandalicious
+
+
+PERMISSIONS REQUIRED
+--------------------------------------------------------------------------------
+- Camera: "Milo needs access to your camera to scan receipts"
+- Photo Library: "Milo needs access to your photo library to import
+  receipt images"
+- Apple Sign-In capability (entitlements)
+
+
+STATISTICS
+--------------------------------------------------------------------------------
+- Total Swift view files: 54
+- Services: 9
+- ViewModels: 4
+- Data Models: 5+
+- Spending Categories: 16
+
+
+TARGET AUDIENCE
+--------------------------------------------------------------------------------
+Users who want to:
+- Understand their spending patterns
+- Track receipts effortlessly via camera or share extension
+- Get AI-driven insights and recommendations
+- Monitor food-related health scores
+- Visualize spending with charts and analytics
+
+================================================================================
+                              END OF CONTEXT DOCUMENT
+================================================================================

@@ -1,0 +1,490 @@
+================================================================================
+SCANDALICIOUS BACKEND - COMPLETE CONTEXT DOCUMENTATION
+================================================================================
+Version: 2.0.0
+Last Updated: January 2026
+Purpose: Receipt scanning and expense tracking API for iOS application
+
+================================================================================
+1. PROJECT OVERVIEW
+================================================================================
+
+Project Name: Scandalicious Backend
+Type: REST API backend for iOS receipt scanning app
+Framework: FastAPI (Python async web framework)
+Runtime: Python 3.11
+Database: PostgreSQL (async with SQLAlchemy 2.0 + asyncpg)
+Deployment: Docker on Railway
+Authentication: Firebase Admin SDK
+
+Core Features:
+- Receipt image/PDF upload and OCR processing
+- Automatic item categorization with AI
+- Health scoring for food items (0-5 scale)
+- Spending analytics and trends
+- AI-powered chat assistant ("Milo") for spending insights
+- Rate limiting for API usage
+
+================================================================================
+2. TECHNOLOGY STACK
+================================================================================
+
+Web Framework: FastAPI 0.109.0 with Uvicorn 0.27.0
+Database: PostgreSQL with SQLAlchemy 2.0.25 (async)
+Authentication: Firebase Admin SDK 6.4.0
+
+AI/LLM Services:
+- Google Gemini 2.0 Flash (V2 chat, receipt categorization)
+
+External APIs:
+- Veryfi API v8 (OCR/receipt parsing)
+
+Other Libraries:
+- python-dotenv, python-dateutil, httpx
+- Pillow, pdf2image (image processing)
+
+================================================================================
+3. PROJECT STRUCTURE
+================================================================================
+
+scandalicious-backend/
+├── app/
+│   ├── main.py                 # FastAPI application entry point
+│   ├── config.py               # Settings and configuration
+│   ├── api/
+│   │   ├── deps.py             # Dependency injection (auth, db sessions)
+│   │   ├── v1/                 # V1 API routes (Claude-based)
+│   │   │   ├── receipts.py
+│   │   │   ├── transactions.py
+│   │   │   ├── chat.py
+│   │   │   ├── analytics.py
+│   │   │   ├── profile.py
+│   │   │   └── rate_limit.py
+│   │   └── v2/                 # V2 API routes (Gemini-based)
+│   │       └── (same structure as v1)
+│   ├── core/
+│   │   ├── security.py         # Firebase token verification
+│   │   └── exceptions.py       # Custom exception classes
+│   ├── db/
+│   │   ├── session.py          # Database connection and session
+│   │   └── repositories/       # Data access layer
+│   │       ├── user_repo.py
+│   │       ├── transaction_repo.py
+│   │       ├── receipt_repo.py
+│   │       ├── user_profile_repo.py
+│   │       └── rate_limit_repo.py
+│   ├── models/                 # SQLAlchemy ORM models
+│   │   ├── user.py
+│   │   ├── receipt.py
+│   │   ├── transaction.py
+│   │   ├── user_profile.py
+│   │   ├── user_rate_limit.py
+│   │   └── enums.py
+│   ├── schemas/                # Pydantic request/response schemas
+│   │   ├── receipt.py
+│   │   ├── transaction.py
+│   │   ├── analytics.py
+│   │   ├── chat.py
+│   │   ├── profile.py
+│   │   └── rate_limit.py
+│   └── services/               # Business logic layer
+│       ├── receipt_processor_v2.py
+│       ├── veryfi_service.py
+│       ├── categorization_service_gemini.py
+│       ├── dobby_chat_service.py
+│       ├── dobby_chat_service_gemini.py
+│       ├── analytics_service.py
+│       ├── rate_limit_service.py
+│       ├── profile_service.py
+│       └── image_validator.py
+├── Dockerfile
+├── requirements.txt
+├── railway.json
+└── Makefile
+
+================================================================================
+4. DATABASE SCHEMA
+================================================================================
+
+USERS TABLE
+-----------
+- id: UUID (primary key)
+- firebase_uid: String (unique, indexed) - Firebase authentication ID
+- email: String (unique, optional)
+- display_name: String (optional)
+- is_active: Boolean (default: true)
+- created_at, updated_at: Timestamps
+
+RECEIPTS TABLE
+--------------
+- id: UUID (primary key)
+- user_id: UUID (foreign key to users)
+- original_filename: String
+- file_type: String
+- file_size_bytes: Integer
+- status: Enum (pending, processing, completed, failed)
+- error_message: String (optional)
+- store_name: String (extracted)
+- receipt_date: Date (extracted)
+- total_amount: Decimal (extracted)
+- created_at, processed_at: Timestamps
+
+TRANSACTIONS TABLE
+------------------
+- id: UUID (primary key)
+- user_id: UUID (foreign key to users)
+- receipt_id: UUID (foreign key to receipts)
+- store_name: String (indexed)
+- item_name: String
+- item_price: Decimal
+- quantity: Integer
+- unit_price: Decimal
+- category: Enum (16 categories, indexed)
+- health_score: Integer 0-5 (optional, for food items)
+- date: Date (indexed)
+- created_at: Timestamp
+
+Indices: (user_id, date), (user_id, store_name), (user_id, category)
+
+USER_PROFILES TABLE
+-------------------
+- user_id: String (primary key, references users.firebase_uid)
+- first_name: String
+- last_name: String
+- gender: Enum (male, female, prefer_not_to_say)
+- profile_completed: Boolean
+- created_at, updated_at: Timestamps
+
+USER_RATE_LIMITS TABLE
+----------------------
+- id: Integer (primary key)
+- firebase_uid: String (unique, indexed)
+- messages_used: Integer (counter for chat)
+- receipts_used: Integer (counter for uploads)
+- period_start_date: Date
+- period_end_date: Date (30-day rolling window)
+- created_at, updated_at: Timestamps
+
+================================================================================
+5. CATEGORY ENUMERATION (16 CATEGORIES)
+================================================================================
+
+1. Meat & Fish
+2. Alcohol
+3. Drinks (Soft/Soda)
+4. Drinks (Water)
+5. Household
+6. Snacks & Sweets
+7. Fresh Produce
+8. Dairy & Eggs
+9. Ready Meals
+10. Bakery
+11. Pantry
+12. Personal Care
+13. Frozen
+14. Baby & Kids
+15. Pet Supplies
+16. Tobacco
+17. Other
+
+================================================================================
+6. HEALTH SCORING SYSTEM
+================================================================================
+
+Food items receive a health score from 0-5:
+
+5 - Very healthy: vegetables, fruits, water
+4 - Healthy: whole grains, lean proteins, eggs
+3 - Moderately healthy: bread, pasta, cheese
+2 - Less healthy: processed meats, sweetened drinks
+1 - Unhealthy: chips, candy, sodas
+0 - Very unhealthy: alcohol, energy drinks
+null - Non-food items (household, personal care, etc.)
+
+================================================================================
+7. API ENDPOINTS
+================================================================================
+
+All endpoints require Firebase authentication via:
+Authorization: Bearer <firebase_id_token>
+
+BASE PATHS:
+- V1 API: /api/v1 (Claude-based chat)
+- V2 API: /api/v2 (Gemini-based chat, grouped receipts)
+
+RECEIPTS
+--------
+POST   /receipts/upload          Upload and process receipt (rate limited: 15/30 days)
+GET    /receipts                 List receipts (paginated, date filtered)
+GET    /receipts/{receipt_id}    Get specific receipt
+DELETE /receipts/{receipt_id}    Delete receipt and all transactions
+
+TRANSACTIONS
+------------
+GET    /transactions                     List transactions (filters: date, store, category)
+GET    /transactions/{transaction_id}    Get specific transaction
+PUT    /transactions/{transaction_id}    Update transaction (corrections)
+DELETE /transactions/{transaction_id}    Delete single transaction
+DELETE /transactions                     Bulk delete by store and date range
+
+CHAT
+----
+POST /chat/         Send message to Milo AI (rate limited: 100/30 days)
+POST /chat/stream   Streaming chat response (Server-Sent Events)
+
+ANALYTICS
+---------
+GET /analytics/summary                        Period spending summary
+GET /analytics/categories                     Category breakdown
+GET /analytics/stores/{store_name}            Store detail breakdown
+GET /analytics/trends                         Historical spending trends
+GET /analytics/stores/{store_name}/trends     Store spending trends
+GET /analytics/periods (V2 only)              Lightweight period metadata
+
+PROFILE
+-------
+GET  /profile    Get user profile
+POST /profile    Create/update profile (upsert)
+PUT  /profile    Update specific profile fields
+
+RATE LIMIT
+----------
+GET /rate-limit  Get current rate limit status
+
+HEALTH
+------
+GET /health      Service health check
+
+================================================================================
+8. RATE LIMITING
+================================================================================
+
+Limits per 30-day rolling window:
+- Chat messages: 100 messages
+- Receipt uploads: 15 receipts
+
+Response headers included:
+- X-RateLimit-Limit
+- X-RateLimit-Remaining
+- X-RateLimit-Reset
+
+When limit exceeded:
+- HTTP 429 Too Many Requests
+- Retry-After header with seconds until reset
+
+================================================================================
+9. RECEIPT PROCESSING PIPELINE
+================================================================================
+
+1. File Validation
+   - Check file type (pdf, jpg, jpeg, png)
+   - Check file size (max 20MB)
+
+2. Image Validation
+   - Minimum resolution: 300x400 pixels
+   - Warning for resolution <600x800
+
+3. Receipt Record Creation
+   - Create record with status "processing"
+
+4. Veryfi OCR Extraction
+   - Send base64-encoded file to Veryfi API
+   - Extract: vendor_name, date, total, line_items
+   - Check for duplicate receipt
+
+5. Duplicate Handling
+   - If duplicate detected: delete receipt record, return is_duplicate: true
+   - No transactions saved for duplicates
+
+6. Gemini Categorization
+   - Clean OCR text (remove artifacts, fix typos)
+   - Categorize items into 16 categories
+   - Assign health scores to food items
+   - Clean store name
+
+7. Transaction Creation
+   - Create transaction records for each item
+   - Store name saved in lowercase
+
+8. Receipt Completion
+   - Update receipt status to "completed"
+   - Return ReceiptUploadResponse
+
+================================================================================
+10. MILO CHAT ASSISTANT
+================================================================================
+
+Personality: Witty, enthusiastic shopping buddy
+Name: Milo
+
+Capabilities:
+- Analyzes spending patterns with precision
+- Uncovers surprising insights
+- Makes data digestible with humor
+- Provides personalized tips
+
+Context Provided to AI:
+- User profile (first name, last name, gender)
+- Transaction history (last 90 days)
+- Store names, categories, amounts, dates
+
+Models Used:
+- V1 API: Claude Sonnet 4 (claude-sonnet-4-20250514)
+- V2 API: Google Gemini 2.0 Flash
+
+================================================================================
+11. EXTERNAL SERVICE INTEGRATIONS
+================================================================================
+
+VERYFI API (OCR)
+----------------
+Endpoint: https://api.veryfi.com/api/v8/partner/documents
+Purpose: Extract structured data from receipt images
+Authentication: CLIENT-ID + AUTHORIZATION headers
+Timeout: 60 seconds
+Output: Vendor name, date, total, line items, duplicate detection
+
+GOOGLE GEMINI API
+-----------------
+Model: gemini-2.0-flash
+Purpose: Item categorization and health scoring
+Input: JSON prompt with store name and items
+Output: Categorized items with health scores
+
+ANTHROPIC CLAUDE API
+--------------------
+Model: claude-sonnet-4-20250514
+Purpose: Chat responses about spending
+Input: System prompt + transaction context + user message
+Output: Streaming or non-streaming text response
+
+FIREBASE ADMIN SDK
+------------------
+Purpose: ID token verification
+Flow: Verify Bearer token -> Return decoded token with uid, email
+Feature: Automatic user provisioning on first authentication
+
+================================================================================
+12. ERROR HANDLING
+================================================================================
+
+Custom Exception Hierarchy:
+- ScandaliciousException (base)
+  - ReceiptProcessingError (422)
+  - ImageValidationError (400)
+  - ClaudeAPIError (503)
+  - VeryfiAPIError (503)
+  - GeminiAPIError (503)
+  - ResourceNotFoundError (404)
+  - PermissionDeniedError (403)
+  - RateLimitExceededError (429)
+
+Standard Error Response Format:
+{
+  "error": "error_type",
+  "message": "Human readable message",
+  "details": {}
+}
+
+================================================================================
+13. CONFIGURATION
+================================================================================
+
+Environment Variables:
+- DATABASE_URL: PostgreSQL connection string
+- DATABASE_POOL_SIZE: Connection pool size (default: 5)
+- DATABASE_MAX_OVERFLOW: Max overflow connections (default: 10)
+- FIREBASE_SERVICE_ACCOUNT: JSON string for service account
+- ANTHROPIC_API_KEY: Claude API key
+- GEMINI_API_KEY: Gemini API key
+- VERYFI_CLIENT_ID, VERYFI_CLIENT_SECRET, VERYFI_USERNAME, VERYFI_API_KEY
+- MAX_UPLOAD_SIZE_MB: Max file size (default: 20)
+- DEBUG: Enable debug mode
+- CORS_ORIGINS: Allowed CORS origins
+
+================================================================================
+14. V1 VS V2 API DIFFERENCES
+================================================================================
+
+V1 API (/api/v1):
+- Chat uses Claude Sonnet 4
+- Receipts list returns flat list
+
+V2 API (/api/v2):
+- Chat uses Gemini 2.0 Flash (faster, cheaper)
+- Receipts list returns GroupedReceiptListResponse
+  - Transactions grouped by receipt_id
+  - Includes: total_amount, items_count, average_health_score
+- Additional endpoint: /analytics/periods
+  - Returns lightweight metadata for all periods with data
+
+================================================================================
+15. KEY BUSINESS LOGIC
+================================================================================
+
+User Auto-Provisioning:
+- First authentication creates user record automatically
+- Uses Firebase UID as primary identifier
+
+Store Name Normalization:
+- All store names saved in lowercase
+- Enables consistent grouping and analytics
+
+Duplicate Receipt Detection:
+- Veryfi provides duplicate detection
+- Duplicates not saved to database
+- API returns is_duplicate: true flag
+
+Rolling Rate Limit Window:
+- 30-day window resets automatically
+- Counters track messages_used and receipts_used
+- Period dates updated when window expires
+
+Profile Completion:
+- profile_completed set to true when all fields provided
+- Enables profile-based features in app
+
+================================================================================
+16. DATABASE CONNECTION MANAGEMENT
+================================================================================
+
+Pool Configuration:
+- pool_size: 5
+- max_overflow: 10
+- All operations async/await non-blocking
+
+Session Management:
+- Request-scoped sessions via dependency injection
+- Auto-commit on success, rollback on error
+- Streaming endpoints manage their own sessions
+
+================================================================================
+17. STREAMING RESPONSE PATTERN
+================================================================================
+
+Chat streaming uses Server-Sent Events (SSE):
+- Content-Type: text/event-stream
+- Event format: data: {JSON}\n\n
+- Event types:
+  - "text": Content chunk
+  - "done": Stream completed
+  - "error": Error occurred
+
+Session Lifecycle:
+- stream_response() creates and manages its own session
+- Prevents database pool exhaustion during long streams
+
+================================================================================
+18. RECENT CHANGES (Git History)
+================================================================================
+
+Latest commits:
+- 6c71efc: Fix db sessions pool
+- 259cc21: Fix trends
+- c6b7c92: Store names saved in lowercase
+- 793870e: Backend support for multiple periods
+- d599e0f: Past periods data corrected
+
+================================================================================
+END OF DOCUMENTATION
+================================================================================
