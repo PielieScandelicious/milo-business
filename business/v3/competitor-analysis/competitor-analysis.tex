@@ -1,0 +1,896 @@
+\documentclass[11pt,a4paper]{article}
+
+% ============================================================================
+% PACKAGES
+% ============================================================================
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{helvet}
+\renewcommand{\familydefault}{\sfdefault}
+\usepackage[margin=2.2cm, headheight=25pt]{geometry}
+\usepackage{xcolor}
+\usepackage{colortbl}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{array}
+\usepackage{graphicx}
+\usepackage{tikz}
+\usepackage{fancyhdr}
+\usepackage{enumitem}
+\usepackage{multirow}
+\usepackage{pifont}
+\usepackage{adjustbox}
+\usetikzlibrary{shapes.geometric, arrows, positioning, calc, patterns}
+
+% ============================================================================
+% COLOR DEFINITIONS
+% ============================================================================
+\definecolor{miloprimary}{RGB}{37, 99, 235}
+\definecolor{milosecondary}{RGB}{99, 102, 241}
+\definecolor{miloaccent}{RGB}{14, 165, 233}
+\definecolor{freegray}{RGB}{107, 114, 128}
+\definecolor{bronzecolor}{RGB}{205, 127, 50}
+\definecolor{silvercolor}{RGB}{119, 136, 153}
+\definecolor{goldcolor}{RGB}{212, 175, 55}
+\definecolor{platinumcolor}{RGB}{139, 92, 246}
+\definecolor{successgreen}{RGB}{34, 197, 94}
+\definecolor{warningorange}{RGB}{249, 115, 22}
+\definecolor{dangerred}{RGB}{239, 68, 68}
+\definecolor{lightbg}{RGB}{248, 250, 252}
+\definecolor{darktext}{RGB}{30, 41, 59}
+\definecolor{darkgreen}{RGB}{22, 163, 74}
+\definecolor{competitorblue}{RGB}{59, 130, 246}
+\definecolor{competitorpurple}{RGB}{168, 85, 247}
+\definecolor{competitorteal}{RGB}{20, 184, 166}
+
+% ============================================================================
+% HEADER/FOOTER CONFIGURATION
+% ============================================================================
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\textcolor{miloprimary}{\textbf{MILO APP}}}
+\fancyhead[R]{\textcolor{freegray}{Competitor Analysis v3.0}}
+\fancyfoot[C]{\textcolor{freegray}{\thepage}}
+\renewcommand{\headrulewidth}{2pt}
+\renewcommand{\headrule}{\hbox to\headwidth{\color{miloprimary}\leaders\hrule height \headrulewidth\hfill}}
+
+% ============================================================================
+% CUSTOM COMMANDS
+% ============================================================================
+\newcommand{\cmark}{\textcolor{successgreen}{\ding{51}}}
+\newcommand{\xmark}{\textcolor{dangerred}{\ding{55}}}
+\newcommand{\threatlevel}[2]{%
+    \textcolor{#1}{\textbf{#2}}%
+}
+
+\newcommand{\competitorbox}[4]{%
+    \begin{tikzpicture}
+        \node[fill=#1!10, draw=#1, line width=1.5pt, rounded corners=8pt,
+              minimum width=3.2cm, minimum height=2.8cm, align=center] {
+            \textcolor{#1}{\textbf{#2}}\\[4pt]
+            \textcolor{darktext}{\small #3}\\[4pt]
+            \textcolor{freegray}{\footnotesize #4}
+        };
+    \end{tikzpicture}%
+}
+
+\newcommand{\infobox}[2]{%
+    \begin{tikzpicture}
+        \node[fill=#1!10, draw=#1, line width=1.5pt, rounded corners=10pt,
+              inner sep=18pt, text width=14.5cm, align=left] {#2};
+    \end{tikzpicture}%
+}
+
+\newcommand{\highlightbox}[2]{%
+    \begin{tikzpicture}
+        \node[fill=#1!8, draw=#1, line width=1.5pt, rounded corners=8pt,
+              inner sep=15pt, text width=14cm, align=center] {#2};
+    \end{tikzpicture}%
+}
+
+% ============================================================================
+% DOCUMENT BEGIN
+% ============================================================================
+\begin{document}
+
+% ============================================================================
+% TITLE PAGE
+% ============================================================================
+\begin{center}
+    \vspace*{0.3cm}
+    {\Huge\textcolor{miloprimary}{\textbf{MILO APP}}}\\[0.4cm]
+    {\LARGE\textcolor{milosecondary}{Competitor Analysis v3.0}}\\[0.2cm]
+    {\large\textcolor{freegray}{Easy Receipt Management Market Landscape}}\\[0.7cm]
+
+    \begin{tikzpicture}
+        \node[fill=miloprimary!10, draw=miloprimary, line width=1.5pt, rounded corners=8pt,
+              inner sep=12pt] {
+            \textcolor{miloprimary}{\textbf{DeepmAInd B.V.} \quad|\quad Version 3.0 \quad|\quad January 2026}
+        };
+    \end{tikzpicture}
+\end{center}
+
+\vspace{0.6cm}
+
+% ============================================================================
+% EXECUTIVE SUMMARY
+% ============================================================================
+\section*{\textcolor{miloprimary}{Executive Summary}}
+
+\begin{center}
+\infobox{miloprimary}{
+    {\Large\textcolor{miloprimary}{\textbf{Market Opportunity \& Competitive Position}}}\\[12pt]
+    {\large The receipt scanner app market is valued at \textbf{\$1.97 billion (2024)} with projected growth to \textbf{\$3.1 billion by 2033} (CAGR 11.2\%). MILO enters a fragmented market with a unique positioning:}\\[12pt]
+    \begin{minipage}[t]{0.48\textwidth}
+        \textbf{Key Competitors:}
+        \begin{itemize}[leftmargin=1.5em, itemsep=2pt]
+            \item Receipt rewards apps (Fetch, Ibotta)
+            \item Business expense tools (Expensify, Zoho)
+            \item Personal finance apps (Monarch, Copilot)
+            \item Health scanners (Yuka)
+        \end{itemize}
+    \end{minipage}
+    \hfill
+    \begin{minipage}[t]{0.48\textwidth}
+        \textbf{MILO's Unique Position:}
+        \begin{itemize}[leftmargin=1.5em, itemsep=2pt]
+            \item Only app combining receipts + health
+            \item Consumer-first (not B2B) focus
+            \item AI-powered with full feature access
+            \item Aggressive entry pricing (\$2/mo)
+        \end{itemize}
+    \end{minipage}
+}
+\end{center}
+
+\vspace{0.8cm}
+
+% ============================================================================
+% MARKET LANDSCAPE
+% ============================================================================
+\section*{\textcolor{miloprimary}{Market Landscape Overview}}
+
+\begin{center}
+\begin{tikzpicture}
+    % Background
+    \fill[lightbg] (-7,-4) rectangle (7,4);
+
+    % Axes
+    \draw[->, thick, freegray] (-6.5,0) -- (6.5,0) node[right] {\small\textcolor{freegray}{Finance Focus}};
+    \draw[->, thick, freegray] (0,-3.5) -- (0,3.5) node[above] {\small\textcolor{freegray}{Health Focus}};
+
+    % Labels
+    \node[freegray] at (-5,0.3) {\footnotesize Low};
+    \node[freegray] at (5,0.3) {\footnotesize High};
+    \node[freegray] at (0.4,3) {\footnotesize High};
+    \node[freegray] at (0.4,-3) {\footnotesize Low};
+
+    % Competitors plotted
+    \node[fill=dangerred!20, draw=dangerred, rounded corners=3pt, inner sep=4pt] at (-3,2.5) {\footnotesize Yuka};
+    \node[fill=dangerred!20, draw=dangerred, rounded corners=3pt, inner sep=4pt] at (-4,1.8) {\footnotesize MyFitnessPal};
+
+    \node[fill=warningorange!20, draw=warningorange, rounded corners=3pt, inner sep=4pt] at (-2,-2) {\footnotesize Fetch};
+    \node[fill=warningorange!20, draw=warningorange, rounded corners=3pt, inner sep=4pt] at (-1,-2.5) {\footnotesize Ibotta};
+    \node[fill=warningorange!20, draw=warningorange, rounded corners=3pt, inner sep=4pt] at (-3,-1.5) {\footnotesize Receipt Hog};
+
+    \node[fill=competitorblue!20, draw=competitorblue, rounded corners=3pt, inner sep=4pt] at (4,-1.5) {\footnotesize Expensify};
+    \node[fill=competitorblue!20, draw=competitorblue, rounded corners=3pt, inner sep=4pt] at (3,-2) {\footnotesize Zoho};
+    \node[fill=competitorblue!20, draw=competitorblue, rounded corners=3pt, inner sep=4pt] at (5,-2.5) {\footnotesize Shoeboxed};
+
+    \node[fill=competitorpurple!20, draw=competitorpurple, rounded corners=3pt, inner sep=4pt] at (4.5,0) {\footnotesize Copilot};
+    \node[fill=competitorpurple!20, draw=competitorpurple, rounded corners=3pt, inner sep=4pt] at (5.5,-0.5) {\footnotesize Monarch};
+    \node[fill=competitorpurple!20, draw=competitorpurple, rounded corners=3pt, inner sep=4pt] at (3.5,-0.5) {\footnotesize YNAB};
+
+    % MILO - unique position
+    \node[fill=successgreen!30, draw=successgreen, line width=2pt, rounded corners=5pt, inner sep=6pt] at (3,2.5) {\textbf{\textcolor{successgreen}{MILO}}};
+
+    % Arrow pointing to MILO's unique position
+    \draw[->, thick, successgreen, dashed] (1,1) -- (2.5,2.2);
+    \node[successgreen, align=center] at (0.5,0.5) {\footnotesize\textbf{Unique}\\[-2pt]\footnotesize\textbf{Position}};
+\end{tikzpicture}
+\end{center}
+
+\vspace{0.3cm}
+
+\begin{center}
+\highlightbox{successgreen}{
+    \textcolor{darkgreen}{\textbf{MILO occupies a unique market position}} --- the only consumer app combining\\
+    \textbf{receipt-level spending analytics} with \textbf{health scoring} and \textbf{AI-powered insights}
+}
+\end{center}
+
+\newpage
+
+% ============================================================================
+% DIRECT COMPETITORS
+% ============================================================================
+\section*{\textcolor{miloprimary}{Direct Competitors: Receipt \& Expense Apps}}
+
+\subsection*{\textcolor{competitorblue}{Business-Focused Receipt Scanners}}
+
+\begin{center}
+\renewcommand{\arraystretch}{1.6}
+\begin{tabular}{>{\raggedright\arraybackslash}p{2.8cm} >{\centering\arraybackslash}p{2.2cm} >{\centering\arraybackslash}p{2.5cm} >{\centering\arraybackslash}p{2.5cm} >{\centering\arraybackslash}p{2.5cm}}
+\toprule
+\rowcolor{miloprimary!15}
+\textbf{Competitor} & \textbf{Users} & \textbf{Starting Price} & \textbf{Target Market} & \textbf{Threat Level} \\
+\midrule
+\rowcolor{competitorblue!8}
+\textbf{Expensify} & 12M+ & \$5/user/mo & Business/SMB & \threatlevel{warningorange}{MEDIUM} \\
+\textbf{Zoho Expense} & 5M+ & \$7/user/mo & Business/SMB & \threatlevel{successgreen}{LOW} \\
+\rowcolor{competitorblue!8}
+\textbf{Shoeboxed} & 1M+ & \$18/mo & Business/SMB & \threatlevel{successgreen}{LOW} \\
+\textbf{Wave} & 3M+ & Free + \$8/mo & Freelancers & \threatlevel{successgreen}{LOW} \\
+\rowcolor{competitorblue!8}
+\textbf{Smart Receipts} & 500K+ & Free & Individuals & \threatlevel{successgreen}{LOW} \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\vspace{0.5cm}
+
+% Expensify Deep Dive
+\begin{center}
+\infobox{competitorblue}{
+    \textcolor{competitorblue}{\textbf{\Large Expensify --- Primary Business Competitor}}\\[12pt]
+    \begin{minipage}[t]{0.55\textwidth}
+        \textbf{Company Profile}
+        \begin{itemize}[leftmargin=1.5em, itemsep=3pt]
+            \item \textbf{Users:} 12M+ globally
+            \item \textbf{Pricing:} \$5--9/user/month
+            \item \textbf{Founded:} 2008
+            \item \textbf{Focus:} Business expense management
+        \end{itemize}
+        \vspace{8pt}
+        \textbf{Key Strengths}
+        \begin{itemize}[leftmargin=1.5em, itemsep=2pt]
+            \item[\cmark] Industry-leading SmartScan OCR
+            \item[\cmark] Deep accounting integrations
+            \item[\cmark] Corporate card management
+            \item[\cmark] Approval workflows
+        \end{itemize}
+    \end{minipage}
+    \hfill
+    \begin{minipage}[t]{0.40\textwidth}
+        \textbf{Key Weaknesses}
+        \begin{itemize}[leftmargin=1.5em, itemsep=2pt]
+            \item[\xmark] No health/nutrition features
+            \item[\xmark] B2B focus, not consumer
+            \item[\xmark] Complex for personal use
+            \item[\xmark] Higher price point
+            \item[\xmark] Aggressive upselling
+        \end{itemize}
+        \vspace{8pt}
+        \textbf{Threat Assessment}\\[4pt]
+        \threatlevel{warningorange}{MEDIUM} --- Different target market (B2B vs B2C). Could enter consumer space but would require significant pivot.
+    \end{minipage}
+}
+\end{center}
+
+\vspace{0.5cm}
+
+\subsection*{\textcolor{warningorange}{Receipt Rewards Apps}}
+
+\begin{center}
+\renewcommand{\arraystretch}{1.6}
+\begin{tabular}{>{\raggedright\arraybackslash}p{2.8cm} >{\centering\arraybackslash}p{2.2cm} >{\centering\arraybackslash}p{2.5cm} >{\centering\arraybackslash}p{2.5cm} >{\centering\arraybackslash}p{2.5cm}}
+\toprule
+\rowcolor{miloprimary!15}
+\textbf{Competitor} & \textbf{Users (MAU)} & \textbf{Price} & \textbf{Revenue Model} & \textbf{Threat Level} \\
+\midrule
+\rowcolor{warningorange!8}
+\textbf{Fetch Rewards} & 12.5M & Free & Data/Partnerships & \threatlevel{warningorange}{MEDIUM} \\
+\textbf{Ibotta} & 14.7M & Free & Cashback & \threatlevel{warningorange}{MEDIUM} \\
+\rowcolor{warningorange!8}
+\textbf{Receipt Hog} & 10M+ & Free & Data monetization & \threatlevel{successgreen}{LOW} \\
+\textbf{Shopkick} & 7M+ & Free & Retail partnerships & \threatlevel{successgreen}{LOW} \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\newpage
+
+% Fetch Rewards Deep Dive
+\begin{center}
+\infobox{warningorange}{
+    \textcolor{warningorange}{\textbf{\Large Fetch Rewards --- Largest Receipt App}}\\[12pt]
+    \begin{minipage}[t]{0.55\textwidth}
+        \textbf{Company Profile}
+        \begin{itemize}[leftmargin=1.5em, itemsep=3pt]
+            \item \textbf{Users:} 12.5M MAU
+            \item \textbf{Valuation:} \$2.5B (2022)
+            \item \textbf{Funding:} \$440M+ raised
+            \item \textbf{Model:} Scan any receipt for points
+        \end{itemize}
+        \vspace{8pt}
+        \textbf{Key Strengths}
+        \begin{itemize}[leftmargin=1.5em, itemsep=2pt]
+            \item[\cmark] Massive user base
+            \item[\cmark] Simple value proposition
+            \item[\cmark] Strong brand partnerships
+            \item[\cmark] Receipt scanning infrastructure
+        \end{itemize}
+    \end{minipage}
+    \hfill
+    \begin{minipage}[t]{0.40\textwidth}
+        \textbf{Key Weaknesses}
+        \begin{itemize}[leftmargin=1.5em, itemsep=2pt]
+            \item[\xmark] No health features
+            \item[\xmark] No spending analytics
+            \item[\xmark] Privacy concerns (data selling)
+            \item[\xmark] Legacy technology
+            \item[\xmark] Users are the product
+        \end{itemize}
+        \vspace{8pt}
+        \textbf{Threat Assessment}\\[4pt]
+        \threatlevel{warningorange}{MEDIUM} --- Large user base familiar with receipt scanning. Different value prop (rewards vs insights).
+    \end{minipage}
+}
+\end{center}
+
+\vspace{0.5cm}
+
+% Ibotta Deep Dive
+\begin{center}
+\infobox{warningorange}{
+    \textcolor{warningorange}{\textbf{\Large Ibotta --- Cashback Leader}}\\[12pt]
+    \begin{minipage}[t]{0.55\textwidth}
+        \textbf{Company Profile}
+        \begin{itemize}[leftmargin=1.5em, itemsep=3pt]
+            \item \textbf{Users:} 14.7M MAU
+            \item \textbf{Valuation:} \$1B+ (IPO filed 2024)
+            \item \textbf{Funding:} \$93M raised
+            \item \textbf{Model:} Cashback on qualifying purchases
+        \end{itemize}
+        \vspace{8pt}
+        \textbf{Key Strengths}
+        \begin{itemize}[leftmargin=1.5em, itemsep=2pt]
+            \item[\cmark] Largest cashback app
+            \item[\cmark] 180+ retail partnerships
+            \item[\cmark] Strong grocery rewards
+            \item[\cmark] IPO trajectory
+        \end{itemize}
+    \end{minipage}
+    \hfill
+    \begin{minipage}[t]{0.40\textwidth}
+        \textbf{Key Weaknesses}
+        \begin{itemize}[leftmargin=1.5em, itemsep=2pt]
+            \item[\xmark] No health features
+            \item[\xmark] No analytics depth
+            \item[\xmark] Requires pre-selecting offers
+            \item[\xmark] Commoditized model
+            \item[\xmark] User value = deals only
+        \end{itemize}
+        \vspace{8pt}
+        \textbf{Threat Assessment}\\[4pt]
+        \threatlevel{warningorange}{MEDIUM} --- Similar receipt capability but fundamentally different model. Users seeking insights won't find value.
+    \end{minipage}
+}
+\end{center}
+
+\vspace{0.8cm}
+
+% ============================================================================
+% COMPETITIVE DIFFERENTIATION
+% ============================================================================
+\section*{\textcolor{miloprimary}{MILO vs Receipt Rewards Apps}}
+
+\begin{center}
+\highlightbox{miloprimary}{
+    {\Large\textcolor{miloprimary}{\textbf{Fundamentally Different Value Propositions}}}\\[12pt]
+    \textcolor{darktext}{\textbf{Receipt Rewards Apps:} ``Scan receipts to earn points/cashback''}\\[4pt]
+    \textcolor{miloprimary}{\textbf{MILO:} ``Understand your spending \& health through intelligent receipt analysis''}
+}
+\end{center}
+
+\vspace{0.3cm}
+
+\begin{center}
+\renewcommand{\arraystretch}{1.5}
+\begin{tabular}{>{\raggedright\arraybackslash}p{4cm} >{\centering\arraybackslash}p{3cm} >{\centering\arraybackslash}p{3cm} >{\centering\arraybackslash}p{3cm}}
+\toprule
+\rowcolor{miloprimary!15}
+\textbf{Feature} & \textbf{MILO} & \textbf{Fetch/Ibotta} & \textbf{Expensify} \\
+\midrule
+Receipt Scanning & \cmark & \cmark & \cmark \\
+\rowcolor{lightbg}
+Health Scores & \cmark & \xmark & \xmark \\
+Spending Analytics & \cmark & \xmark & \cmark \\
+\rowcolor{lightbg}
+AI Categorization & \cmark & Limited & \cmark \\
+AI Chat Assistant & \cmark & \xmark & \xmark \\
+\rowcolor{lightbg}
+Item-Level Data & \cmark & \xmark & Limited \\
+Points/Cashback & \xmark & \cmark & \xmark \\
+\rowcolor{lightbg}
+Entry Price & \textcolor{successgreen}{\textbf{\$2/mo}} & Free* & \$5/user \\
+Target User & Consumers & Deal seekers & Businesses \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+{\small *Free but users' data is monetized}
+
+\newpage
+
+% ============================================================================
+% INDIRECT COMPETITORS
+% ============================================================================
+\section*{\textcolor{miloprimary}{Indirect Competitors: Personal Finance Apps}}
+
+\begin{center}
+\renewcommand{\arraystretch}{1.6}
+\begin{tabular}{>{\raggedright\arraybackslash}p{2.8cm} >{\centering\arraybackslash}p{2.5cm} >{\centering\arraybackslash}p{2.5cm} >{\centering\arraybackslash}p{2.5cm} >{\centering\arraybackslash}p{2.5cm}}
+\toprule
+\rowcolor{miloprimary!15}
+\textbf{App} & \textbf{Monthly} & \textbf{Annual} & \textbf{Platform} & \textbf{Threat Level} \\
+\midrule
+\rowcolor{competitorpurple!8}
+\textbf{Copilot Money} & \$13/mo & \$95/year & iOS/Mac/Web & \threatlevel{warningorange}{MEDIUM} \\
+\textbf{Monarch Money} & \$14.99/mo & \$99.99/year & iOS/Android/Web & \threatlevel{warningorange}{MEDIUM} \\
+\rowcolor{competitorpurple!8}
+\textbf{YNAB} & \$14.99/mo & \$109/year & All platforms & \threatlevel{successgreen}{LOW} \\
+\textbf{Rocket Money} & \$6--12/mo & \$48--99/year & iOS/Android & \threatlevel{successgreen}{LOW} \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\vspace{0.5cm}
+
+% Copilot Deep Dive
+\begin{center}
+\infobox{competitorpurple}{
+    \textcolor{competitorpurple}{\textbf{\Large Copilot Money --- AI-First Budgeting}}\\[12pt]
+    \begin{minipage}[t]{0.55\textwidth}
+        \textbf{Company Profile}
+        \begin{itemize}[leftmargin=1.5em, itemsep=3pt]
+            \item \textbf{Price:} \$13/month or \$95/year
+            \item \textbf{Founded:} 2020
+            \item \textbf{Platform:} iOS, Mac, Web (just launched)
+            \item \textbf{Focus:} AI-powered budgeting
+        \end{itemize}
+        \vspace{8pt}
+        \textbf{Key Strengths}
+        \begin{itemize}[leftmargin=1.5em, itemsep=2pt]
+            \item[\cmark] Beautiful, modern UI
+            \item[\cmark] AI transaction categorization
+            \item[\cmark] AI chatbot for insights
+            \item[\cmark] Cryptocurrency support
+        \end{itemize}
+    \end{minipage}
+    \hfill
+    \begin{minipage}[t]{0.40\textwidth}
+        \textbf{Key Weaknesses}
+        \begin{itemize}[leftmargin=1.5em, itemsep=2pt]
+            \item[\xmark] No receipt scanning
+            \item[\xmark] No health features
+            \item[\xmark] No item-level data
+            \item[\xmark] Bank-first (not receipt)
+            \item[\xmark] Higher price (\$13 vs \$2--10)
+        \end{itemize}
+        \vspace{8pt}
+        \textbf{Threat Assessment}\\[4pt]
+        \threatlevel{warningorange}{MEDIUM} --- Similar AI-native approach but different data source. Could be complementary rather than competitive.
+    \end{minipage}
+}
+\end{center}
+
+\vspace{0.5cm}
+
+% Monarch Deep Dive
+\begin{center}
+\infobox{competitorpurple}{
+    \textcolor{competitorpurple}{\textbf{\Large Monarch Money --- Household Finance}}\\[12pt]
+    \begin{minipage}[t]{0.55\textwidth}
+        \textbf{Company Profile}
+        \begin{itemize}[leftmargin=1.5em, itemsep=3pt]
+            \item \textbf{Price:} \$14.99/month or \$99.99/year
+            \item \textbf{Platform:} iOS, Android, Web
+            \item \textbf{Focus:} Comprehensive household finance
+            \item \textbf{Users:} Growing rapidly post-Mint closure
+        \end{itemize}
+        \vspace{8pt}
+        \textbf{Key Strengths}
+        \begin{itemize}[leftmargin=1.5em, itemsep=2pt]
+            \item[\cmark] Multi-user/household support
+            \item[\cmark] Investment tracking
+            \item[\cmark] Long-term financial planning
+            \item[\cmark] Cross-platform availability
+        \end{itemize}
+    \end{minipage}
+    \hfill
+    \begin{minipage}[t]{0.40\textwidth}
+        \textbf{Key Weaknesses}
+        \begin{itemize}[leftmargin=1.5em, itemsep=2pt]
+            \item[\xmark] No receipt scanning
+            \item[\xmark] No health features
+            \item[\xmark] No item-level granularity
+            \item[\xmark] Premium pricing
+            \item[\xmark] Bank-centric approach
+        \end{itemize}
+        \vspace{8pt}
+        \textbf{Threat Assessment}\\[4pt]
+        \threatlevel{warningorange}{MEDIUM} --- Different approach (bank vs receipt). Could be complementary for users wanting both.
+    \end{minipage}
+}
+\end{center}
+
+\newpage
+
+% ============================================================================
+% HEALTH APPS
+% ============================================================================
+\section*{\textcolor{miloprimary}{Indirect Competitors: Health \& Nutrition Apps}}
+
+\begin{center}
+\renewcommand{\arraystretch}{1.6}
+\begin{tabular}{>{\raggedright\arraybackslash}p{3cm} >{\centering\arraybackslash}p{2.5cm} >{\centering\arraybackslash}p{2.5cm} >{\centering\arraybackslash}p{2.5cm} >{\centering\arraybackslash}p{2.5cm}}
+\toprule
+\rowcolor{miloprimary!15}
+\textbf{App} & \textbf{Users} & \textbf{Price} & \textbf{Focus} & \textbf{Threat Level} \\
+\midrule
+\rowcolor{dangerred!8}
+\textbf{Yuka} & 80M global & Freemium & Product scanning & \threatlevel{successgreen}{LOW} \\
+\textbf{MyFitnessPal} & 200M+ & Freemium & Calorie tracking & \threatlevel{successgreen}{LOW} \\
+\rowcolor{dangerred!8}
+\textbf{Lifesum} & 50M+ & Freemium & Diet tracking & \threatlevel{successgreen}{LOW} \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\vspace{0.5cm}
+
+% Yuka Deep Dive
+\begin{center}
+\infobox{successgreen}{
+    \textcolor{darkgreen}{\textbf{\Large Yuka --- Health Scanning Leader (Potential Partner)}}\\[12pt]
+    \begin{minipage}[t]{0.55\textwidth}
+        \textbf{Company Profile}
+        \begin{itemize}[leftmargin=1.5em, itemsep=3pt]
+            \item \textbf{Users:} 80M globally, 20M+ in US
+            \item \textbf{Revenue:} \$20.3M (2023)
+            \item \textbf{Model:} Premium subscriptions
+            \item \textbf{Database:} 4M food + 2M cosmetic products
+        \end{itemize}
+        \vspace{8pt}
+        \textbf{Key Strengths}
+        \begin{itemize}[leftmargin=1.5em, itemsep=2pt]
+            \item[\cmark] Massive health-conscious user base
+            \item[\cmark] Comprehensive product database
+            \item[\cmark] Strong brand trust
+            \item[\cmark] Viral word-of-mouth growth
+        \end{itemize}
+    \end{minipage}
+    \hfill
+    \begin{minipage}[t]{0.40\textwidth}
+        \textbf{Why Low Threat}
+        \begin{itemize}[leftmargin=1.5em, itemsep=2pt]
+            \item[\xmark] No receipt scanning
+            \item[\xmark] No spending analytics
+            \item[\xmark] No price tracking
+            \item[\xmark] Point-of-decision only
+            \item[\xmark] No purchase history
+        \end{itemize}
+        \vspace{8pt}
+        \textbf{Opportunity}\\[4pt]
+        \textcolor{darkgreen}{\textbf{Potential partner or user source.}} Yuka users are ideal MILO targets --- health-conscious consumers who would value post-purchase insights.
+    \end{minipage}
+}
+\end{center}
+
+\vspace{0.8cm}
+
+% ============================================================================
+% PRICING COMPARISON
+% ============================================================================
+\section*{\textcolor{miloprimary}{Pricing Comparison}}
+
+\begin{center}
+\renewcommand{\arraystretch}{1.5}
+\begin{tabular}{>{\raggedright\arraybackslash}p{3.5cm} >{\centering\arraybackslash}p{2.5cm} >{\centering\arraybackslash}p{2.5cm} >{\centering\arraybackslash}p{2.5cm} >{\centering\arraybackslash}p{2.5cm}}
+\toprule
+\rowcolor{miloprimary!15}
+\textbf{App} & \textbf{Entry Price} & \textbf{Top Tier} & \textbf{Full Features} & \textbf{Health} \\
+\midrule
+\rowcolor{successgreen!15}
+\textcolor{miloprimary}{\textbf{MILO}} & \textcolor{successgreen}{\textbf{\$2/mo}} & \$10/mo & \cmark All tiers & \cmark \\
+Copilot & \$13/mo & \$13/mo & \cmark & \xmark \\
+\rowcolor{lightbg}
+Monarch & \$14.99/mo & \$14.99/mo & \cmark & \xmark \\
+YNAB & \$14.99/mo & \$14.99/mo & \cmark & \xmark \\
+\rowcolor{lightbg}
+Expensify & \$5/user & \$9/user & \xmark & \xmark \\
+Shoeboxed & \$18/mo & \$54/mo & \xmark & \xmark \\
+\rowcolor{lightbg}
+Fetch/Ibotta & Free* & Free* & n/a & \xmark \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+{\small *Free but users' data is the product}
+
+\vspace{0.3cm}
+
+\begin{center}
+\highlightbox{successgreen}{
+    \textcolor{darkgreen}{\textbf{MILO offers the lowest entry price (\$2/mo) among premium receipt/finance apps}}\\[4pt]
+    \textcolor{darktext}{Full feature access at every tier --- no feature-gating or upsell walls}
+}
+\end{center}
+
+\newpage
+
+% ============================================================================
+% COMPETITIVE ADVANTAGE
+% ============================================================================
+\section*{\textcolor{miloprimary}{MILO's Competitive Advantages}}
+
+\begin{center}
+\infobox{miloprimary}{
+    {\Large\textcolor{miloprimary}{\textbf{Key Differentiators}}}\\[15pt]
+
+    \begin{minipage}[t]{0.48\textwidth}
+        \textbf{\textcolor{successgreen}{1. Unique Market Position}}
+        \begin{itemize}[leftmargin=1.5em, itemsep=3pt]
+            \item Only app combining receipts + health
+            \item Item-level granularity vs transaction-level
+            \item Consumer-first (not B2B repackaged)
+            \item Privacy-respecting subscription model
+        \end{itemize}
+
+        \vspace{10pt}
+        \textbf{\textcolor{successgreen}{2. AI-Native Architecture}}
+        \begin{itemize}[leftmargin=1.5em, itemsep=3pt]
+            \item Built for AI from day one
+            \item Intelligent categorization (16 categories)
+            \item Health scoring (0--5 scale)
+            \item Conversational AI assistant
+        \end{itemize}
+    \end{minipage}
+    \hfill
+    \begin{minipage}[t]{0.48\textwidth}
+        \textbf{\textcolor{successgreen}{3. Aggressive Pricing}}
+        \begin{itemize}[leftmargin=1.5em, itemsep=3pt]
+            \item \$2/mo entry --- lowest in category
+            \item Full features at every tier
+            \item Volume-based, not feature-gated
+            \item 17\% annual discount
+        \end{itemize}
+
+        \vspace{10pt}
+        \textbf{\textcolor{successgreen}{4. Consumer Experience}}
+        \begin{itemize}[leftmargin=1.5em, itemsep=3pt]
+            \item Simple, focused value proposition
+            \item ``Easy receipt manager'' positioning
+            \item No complex business features
+            \item Mobile-first design
+        \end{itemize}
+    \end{minipage}
+}
+\end{center}
+
+\vspace{0.8cm}
+
+% ============================================================================
+% THREAT MATRIX
+% ============================================================================
+\section*{\textcolor{miloprimary}{Competitive Threat Matrix}}
+
+\begin{center}
+\renewcommand{\arraystretch}{1.5}
+\begin{tabular}{>{\raggedright\arraybackslash}p{3cm} >{\centering\arraybackslash}p{2cm} >{\centering\arraybackslash}p{2cm} >{\centering\arraybackslash}p{2cm} >{\centering\arraybackslash}p{4cm}}
+\toprule
+\rowcolor{miloprimary!15}
+\textbf{Competitor} & \textbf{Market Overlap} & \textbf{Feature Overlap} & \textbf{Threat} & \textbf{Defensive Moat} \\
+\midrule
+\rowcolor{warningorange!8}
+Fetch Rewards & High & Low & \threatlevel{warningorange}{MEDIUM} & Health features, analytics \\
+Ibotta & High & Low & \threatlevel{warningorange}{MEDIUM} & Health features, analytics \\
+\rowcolor{warningorange!8}
+Expensify & Low & Medium & \threatlevel{warningorange}{MEDIUM} & Consumer focus, health \\
+Copilot & Medium & Medium & \threatlevel{warningorange}{MEDIUM} & Receipt data, health \\
+\rowcolor{warningorange!8}
+Monarch & Medium & Low & \threatlevel{warningorange}{MEDIUM} & Receipt data, health, price \\
+Yuka & Medium & Low & \threatlevel{successgreen}{LOW} & Spending analytics, receipts \\
+\rowcolor{lightbg}
+YNAB & Low & Low & \threatlevel{successgreen}{LOW} & Completely different approach \\
+Receipt Hog & High & Low & \threatlevel{successgreen}{LOW} & Modern tech, health, analytics \\
+\rowcolor{lightbg}
+Shoeboxed & Low & Medium & \threatlevel{successgreen}{LOW} & Consumer focus, health, price \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\vspace{0.5cm}
+
+\begin{center}
+\highlightbox{miloprimary}{
+    \textcolor{miloprimary}{\textbf{No direct competitor combines receipt scanning + health scoring + AI analytics}}\\[4pt]
+    \textcolor{darktext}{MILO's defensive moat is the unique intersection of these three capabilities}
+}
+\end{center}
+
+\newpage
+
+% ============================================================================
+% COMPETITIVE RESPONSE SCENARIOS
+% ============================================================================
+\section*{\textcolor{miloprimary}{Competitive Response Scenarios}}
+
+\begin{center}
+\infobox{warningorange}{
+    \textcolor{warningorange}{\textbf{\Large If Fetch/Ibotta Adds Health Scoring}}\\[12pt]
+    \begin{minipage}[t]{0.35\textwidth}
+        \textbf{Probability}\\[4pt]
+        \begin{tikzpicture}
+            \fill[warningorange!30] (0,0) rectangle (2.5,0.5);
+            \fill[warningorange] (0,0) rectangle (0.75,0.5);
+            \node at (1.25,0.25) {\small\textcolor{darktext}{Low (25\%)}};
+        \end{tikzpicture}
+    \end{minipage}
+    \hfill
+    \begin{minipage}[t]{0.60\textwidth}
+        \textbf{MILO Response Strategy}
+        \begin{itemize}[leftmargin=1.5em, itemsep=2pt]
+            \item Emphasize depth of health scoring (0--5 scale vs binary)
+            \item Highlight privacy model (subscription vs data selling)
+            \item Focus on analytics and AI assistant differentiators
+            \item First-mover advantage in health + finance combination
+        \end{itemize}
+    \end{minipage}
+}
+\end{center}
+
+\vspace{0.5cm}
+
+\begin{center}
+\infobox{competitorpurple}{
+    \textcolor{competitorpurple}{\textbf{\Large If Copilot/Monarch Adds Receipt Scanning}}\\[12pt]
+    \begin{minipage}[t]{0.35\textwidth}
+        \textbf{Probability}\\[4pt]
+        \begin{tikzpicture}
+            \fill[competitorpurple!30] (0,0) rectangle (2.5,0.5);
+            \fill[competitorpurple] (0,0) rectangle (1.25,0.5);
+            \node at (1.25,0.25) {\small\textcolor{darktext}{Medium (50\%)}};
+        \end{tikzpicture}
+    \end{minipage}
+    \hfill
+    \begin{minipage}[t]{0.60\textwidth}
+        \textbf{MILO Response Strategy}
+        \begin{itemize}[leftmargin=1.5em, itemsep=2pt]
+            \item Differentiate on health scoring (unique to MILO)
+            \item Emphasize item-level granularity expertise
+            \item Compete on price (\$2--10 vs \$13--15)
+            \item Focus on ``easy receipt manager'' simplicity
+        \end{itemize}
+    \end{minipage}
+}
+\end{center}
+
+\vspace{0.5cm}
+
+\begin{center}
+\infobox{successgreen}{
+    \textcolor{darkgreen}{\textbf{\Large If Yuka Adds Receipt Scanning}}\\[12pt]
+    \begin{minipage}[t]{0.35\textwidth}
+        \textbf{Probability}\\[4pt]
+        \begin{tikzpicture}
+            \fill[successgreen!30] (0,0) rectangle (2.5,0.5);
+            \fill[successgreen] (0,0) rectangle (0.5,0.5);
+            \node at (1.25,0.25) {\small\textcolor{darktext}{Very Low (15\%)}};
+        \end{tikzpicture}
+    \end{minipage}
+    \hfill
+    \begin{minipage}[t]{0.60\textwidth}
+        \textbf{MILO Response Strategy}
+        \begin{itemize}[leftmargin=1.5em, itemsep=2pt]
+            \item Would require Yuka to build entirely new capability
+            \item MILO has first-mover advantage
+            \item Consider partnership opportunities instead
+            \item Yuka users are ideal MILO target audience
+        \end{itemize}
+    \end{minipage}
+}
+\end{center}
+
+\newpage
+
+% ============================================================================
+% MARKET OPPORTUNITY
+% ============================================================================
+\section*{\textcolor{miloprimary}{Market Opportunity Summary}}
+
+\begin{center}
+\infobox{miloaccent}{
+    \textcolor{miloaccent}{\textbf{\Large Receipt Scanner App Market}}\\[12pt]
+    \begin{minipage}[t]{0.48\textwidth}
+        \textbf{Market Size \& Growth}
+        \begin{itemize}[leftmargin=1.5em, itemsep=4pt]
+            \item \textbf{2024:} \$1.97 billion
+            \item \textbf{2033:} \$3.1 billion (projected)
+            \item \textbf{CAGR:} 11.2\%
+            \item \textbf{Key drivers:} Smartphone adoption, digitalization, AI advancements
+        \end{itemize}
+    \end{minipage}
+    \hfill
+    \begin{minipage}[t]{0.48\textwidth}
+        \textbf{Regional Growth}
+        \begin{itemize}[leftmargin=1.5em, itemsep=4pt]
+            \item \textbf{Europe:} 10.2\% CAGR
+            \item \textbf{Asia-Pacific:} 13.7\% CAGR (fastest)
+            \item \textbf{US:} Mature market, high value
+            \item \textbf{Segment:} Personal expense tracking growing fastest
+        \end{itemize}
+    \end{minipage}
+}
+\end{center}
+
+\vspace{0.6cm}
+
+\begin{center}
+\infobox{successgreen}{
+    \textcolor{darkgreen}{\textbf{\Large MILO's Addressable Market}}\\[12pt]
+    \begin{minipage}[t]{0.48\textwidth}
+        \textbf{Primary Target}
+        \begin{itemize}[leftmargin=1.5em, itemsep=4pt]
+            \item Health-conscious consumers
+            \item Budget-aware individuals/families
+            \item US market (initial focus)
+            \item Ages 25--45
+        \end{itemize}
+    \end{minipage}
+    \hfill
+    \begin{minipage}[t]{0.48\textwidth}
+        \textbf{User Sources}
+        \begin{itemize}[leftmargin=1.5em, itemsep=4pt]
+            \item Yuka users (20M+ in US)
+            \item Former Mint users (seeking alternatives)
+            \item Health app users wanting spending insights
+            \item Receipt app users wanting more than rewards
+        \end{itemize}
+    \end{minipage}
+}
+\end{center}
+
+\vspace{0.8cm}
+
+% ============================================================================
+% KEY TAKEAWAYS
+% ============================================================================
+\section*{\textcolor{miloprimary}{Key Takeaways}}
+
+\begin{center}
+\begin{tikzpicture}
+    \node[fill=miloprimary!8, draw=miloprimary, line width=2pt, rounded corners=12pt,
+          inner sep=20pt, text width=14.5cm, align=left] {
+        {\Large\textcolor{miloprimary}{\textbf{Competitive Analysis Conclusions}}}\\[15pt]
+
+        \begin{enumerate}[leftmargin=1.5em, itemsep=8pt]
+            \item \textbf{No direct competitor exists} in the health + receipt + analytics intersection
+
+            \item \textbf{Receipt rewards apps} (Fetch, Ibotta) have user bases familiar with scanning but different value propositions --- MILO targets users wanting insights, not points
+
+            \item \textbf{Finance apps} (Copilot, Monarch) offer analytics but lack receipt/item-level data and health features --- MILO is complementary or superior for receipt-based tracking
+
+            \item \textbf{Health apps} (Yuka) have ideal user demographics but no finance features --- potential partnership or user acquisition source
+
+            \item \textbf{Pricing is aggressive} --- \$2/mo entry undercuts all premium competitors while maintaining full feature access
+
+            \item \textbf{Defensive moat} is the unique combination of AI-powered receipt scanning, health scoring, and spending analytics
+        \end{enumerate}
+    };
+\end{tikzpicture}
+\end{center}
+
+\vspace{1cm}
+
+% ============================================================================
+% FOOTER
+% ============================================================================
+\begin{center}
+    \textcolor{freegray}{\rule{14cm}{0.5pt}}\\[0.4cm]
+    \textcolor{freegray}{\small DeepmAInd B.V. | Confidential | Version 3.0 | January 2026}\\[0.2cm]
+    \textcolor{freegray}{\scriptsize Market data sources: Growth Market Reports, Market Intelo, Sensor Tower, Company filings}
+\end{center}
+
+\end{document}
