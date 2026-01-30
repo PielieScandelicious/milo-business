@@ -1,6 +1,11 @@
 {
   "disabledMcpjsonServers": ["railway-mcp-server"],
   "permissions": {
-    "allow": ["mcp__google-workspace__*"]
+    "allow": [
+      "mcp__google-workspace__*",
+      "edit__*",
+      "write__*",
+      "bash__*"
+    ]
   }
 }
