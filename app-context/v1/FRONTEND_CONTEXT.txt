@@ -1,1147 +1,554 @@
 ================================================================================
-                         MILO iOS FRONTEND CONTEXT
-                    Technical Architecture Documentation
+                        MILO FRONTEND iOS - TECHNICAL CONTEXT
+                              Last Updated: 2026-01-31
 ================================================================================
+
+PROJECT OVERVIEW
+--------------------------------------------------------------------------------
+App Name: Scandalicious (internal: Milo)
+Platform: iOS 16+
+Language: Swift 5.9+
+Purpose: Receipt scanning, expense tracking, and AI-powered spending insights
+
+Codebase Size: ~6,970 lines of Swift code
+Architecture: MVVM (Model-View-ViewModel)
 
 ================================================================================
 1. FRAMEWORK & RENDERING
 ================================================================================
 
-Platform: Native iOS (SwiftUI)
-Minimum iOS Version: iOS 17.0+
-Language: Swift 5.9+
-Build System: Xcode with Swift Package Manager
+PRIMARY FRAMEWORK: SwiftUI 5.0+
+- Pure SwiftUI implementation (no UIKit view controllers)
+- Modern SwiftUI 2+ features utilized throughout
 
-1.1 Application Entry Point
----------------------------
-File: Scandalicious/App/DobbyApp.swift
+KEY SWIFTUI FEATURES USED:
+- @StateObject for persistent ViewModel instances
+- @EnvironmentObject for dependency injection
+- .task and async/await for concurrency
+- NavigationStack for iOS 16+ navigation
+- TabView for multi-tab interface
+- Custom ViewModifiers for reusable styles
 
-The app uses SwiftUI's declarative @main struct pattern:
+UIKit INTEGRATION (Minimal):
+- AVFoundation bridge for camera capture (CustomCameraView.swift)
+- CoreMotion for gyroscope data in LiquidGaugeView
 
-    @main
-    struct ScandaLiciousApp: App {
-        @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
-        @StateObject private var authManager: AuthenticationManager
-        @StateObject private var subscriptionManager = SubscriptionManager.shared
-        @Environment(\.scenePhase) private var scenePhase
-
-        var body: some Scene {
-            WindowGroup {
-                Group {
-                    if authManager.isAuthenticated {
-                        ContentView()
-                    } else {
-                        LoginView()
-                    }
-                }
-                .environmentObject(authManager)
-                .environmentObject(subscriptionManager)
-            }
-        }
-    }
-
-Key Initialization:
-- Firebase.configure() called in AppDelegate.application(_:didFinishLaunching:)
-- AuthenticationManager initialized with Firebase auth state listener
-- SubscriptionManager singleton injected via @EnvironmentObject
-- Scene phase monitoring for app lifecycle events
-
-1.2 Environment Configuration
------------------------------
-File: Scandalicious/Config/env.swift
-
-Compile-time configuration using Swift preprocessor flags:
-
-    enum AppConfiguration {
-        #if PRODUCTION
-        static let backendBaseURL = "https://scandalicious-api-production.up.railway.app"
-        #else
-        static let backendBaseURL = "https://scandalicious-api-non-prod.up.railway.app"
-        #endif
-
-        private static let apiVersion = "v2"
-
-        static var apiBase: String {
-            "\(backendBaseURL)/api/\(apiVersion)"
-        }
-
-        static var receiptUploadEndpoint: String {
-            "\(apiBase)/receipts/"
-        }
-
-        static var chatEndpoint: String {
-            "\(apiBase)/chat/"
-        }
-
-        static var chatStreamEndpoint: String {
-            "\(apiBase)/chat/stream"
-        }
-    }
-
-Build Configurations:
-- DEBUG: Non-production backend
-- PRODUCTION: Production backend (set via Xcode build schemes)
-
-1.3 Rendering Architecture
---------------------------
-SwiftUI's declarative rendering model:
-- Views are value types (structs) that describe UI state
-- Body property computed when state changes
-- Automatic diffing and efficient re-rendering
-- ViewBuilder DSL for composing complex layouts
-
-Key SwiftUI Features Used:
-- @ViewBuilder for conditional view composition
-- GeometryReader for responsive layouts
-- LazyVStack/LazyHStack for performance with large lists
-- AsyncImage for remote image loading
-- Sheet/FullScreenCover for modal presentations
-
+ENTRY POINT:
+  /Scandalicious/App/DobbyApp.swift
+  - Configures Firebase on launch
+  - Sets up environment objects
+  - Determines initial view based on auth state
 
 ================================================================================
 2. STATE MANAGEMENT
 ================================================================================
 
-2.1 Property Wrappers Overview
-------------------------------
-SwiftUI's reactive state management uses property wrappers:
-
-@State           - Local view state (value types)
-@Binding         - Two-way binding to parent state
-@StateObject     - Owns ObservableObject lifecycle
-@ObservedObject  - References ObservableObject (doesn't own)
-@EnvironmentObject - Dependency injection through view hierarchy
-@Published       - Triggers view updates when value changes
-
-2.2 Application State Architecture
-----------------------------------
-
-                    ┌─────────────────────────────┐
-                    │      ScandaLiciousApp       │
-                    │   @StateObject authManager  │
-                    │   @StateObject subscription │
-                    └──────────────┬──────────────┘
-                                   │
-                    ┌──────────────┴──────────────┐
-                    │                             │
-              ┌─────┴─────┐                 ┌─────┴─────┐
-              │ LoginView │                 │ContentView│
-              │  (Guest)  │                 │  (Auth'd) │
-              └───────────┘                 └─────┬─────┘
-                                                  │
-                          ┌───────────────────────┼───────────────────────┐
-                          │                       │                       │
-                    ┌─────┴─────┐           ┌─────┴─────┐           ┌─────┴─────┐
-                    │OverviewTab│           │  ScanTab  │           │  MiloTab  │
-                    └───────────┘           └───────────┘           └───────────┘
-
-2.3 AuthenticationManager
--------------------------
-File: Scandalicious/ViewModels/AuthenticationManager.swift
-
-Central authentication state holder:
-
-    class AuthenticationManager: ObservableObject {
-        @Published var isAuthenticated = false
-        @Published var currentUser: FirebaseAuth.User?
-        @Published var isLoading = true
-        @Published var authError: String?
-        @Published var currentUserProfile: UserProfile?
-
-        private var authStateListenerHandle: AuthStateDidChangeListenerHandle?
-
-        init() {
-            setupAuthStateListener()
-        }
-
-        private func setupAuthStateListener() {
-            authStateListenerHandle = Auth.auth().addStateDidChangeListener { [weak self] _, user in
-                DispatchQueue.main.async {
-                    self?.currentUser = user
-                    self?.isAuthenticated = user != nil
-                    self?.isLoading = false
-
-                    if let user = user {
-                        self?.saveTokenToSharedStorage(user: user)
-                    }
-                }
-            }
-        }
-    }
-
-Token Sharing for Share Extension:
-- Keychain: Most secure, persists across app installs
-- App Group UserDefaults: Faster access, shared with extension
-- Keys: "firebase_auth_token", "SCANDALICIOUS_AUTH_TOKEN"
-
-2.4 AnalyticsViewModel (Main Data State)
-----------------------------------------
-File: Scandalicious/ViewModels/AnalyticsViewModel.swift
-
-Primary data management for spending analytics:
-
-    class AnalyticsViewModel: ObservableObject {
-        @Published var categoryBreakdown: [CategorySpending] = []
-        @Published var totalSpent: Double = 0.0
-        @Published var periodLabel: String = ""
-        @Published var isLoading = false
-        @Published var errorMessage: String?
-        @Published var hasData = false
-        @Published var spendingByStore: [StoreSpending] = []
-        @Published var receipts: [Receipt] = []
-        @Published var transactions: [Transaction] = []
-        @Published var trendData: TrendData?
-
-        private let analyticsService = AnalyticsAPIService.shared
-
-        func fetchAnalytics(period: String) async { ... }
-        func fetchCategoryBreakdown(period: String) async { ... }
-        func fetchStoreBreakdown(period: String) async { ... }
-    }
-
-2.5 Singleton Managers
+GLOBAL STATE PATTERN:
 ----------------------
+Environment Objects passed app-wide:
+- AuthenticationManager: Authentication state, user profile, tokens
+- SubscriptionManager: StoreKit 2 subscription status
 
-SubscriptionManager (StoreKit):
-File: Scandalicious/ViewModels/SubscriptionManager.swift
+VIEWMODEL PATTERN:
+------------------
+All ViewModels inherit from ObservableObject with @Published properties:
 
-    @MainActor
-    class SubscriptionManager: ObservableObject {
-        static let shared = SubscriptionManager()
+  @Published var state: LoadingState<T>   // Generic loading state
+  @Published var receipts: [APIReceipt]
+  @Published var isLoading: Bool
+  @Published var error: String?
 
-        @Published var subscriptionStatus: SubscriptionStatus = .notSubscribed
-        @Published var availableProducts: [Product] = []
-        @Published var isLoading = false
-    }
+LOADING STATE ENUM:
+  enum LoadingState<T> {
+      case idle
+      case loading
+      case success(T)
+      case error(String)
+  }
 
-RateLimitManager:
-File: Scandalicious/Services/RateLimitManager.swift
+LOCAL STATE:
+------------
+- @State for view-specific temporary state
+- @FocusState for input focus management
+- @Environment for system preferences (scenePhase, colorScheme)
 
-    @MainActor
-    class RateLimitManager: ObservableObject {
-        static let shared = RateLimitManager()
+CROSS-VIEW COMMUNICATION:
+-------------------------
+NotificationCenter for decoupled updates:
+  - .receiptsDataDidChange - triggers receipt list refresh
+  - .receiptDeleted - handles deletion across views
 
-        @Published var messagesUsed: Int = 0
-        @Published var messagesLimit: Int = 0
-        @Published var periodEndDate: Date?
+SINGLETON MANAGERS:
+  - RateLimitManager.shared
+  - SubscriptionManager.shared
 
-        func updateFromHeaders(_ headers: [AnyHashable: Any]) { ... }
-    }
-
-StoreDataManager:
-File: Scandalicious/ViewModels/StoreDataManager.swift
-- Caches store breakdown data by period
-- Prevents redundant API calls
-
-TransactionManager:
-File: Scandalicious/ViewModels/TransactionManager.swift
-- Caches transaction lists by period
-- Manages transaction state across views
-
-2.6 Combine Framework Usage
----------------------------
-The app uses Combine for reactive patterns:
-
-    // In AuthenticationManager
-    private var cancellables = Set<AnyCancellable>()
-
-    // Token refresh subscription
-    Auth.auth().currentUser?.getIDTokenResult()
-        .publisher
-        .sink(receiveCompletion: { _ in },
-              receiveValue: { [weak self] token in
-                  self?.saveTokenToSharedStorage(token: token.token)
-              })
-        .store(in: &cancellables)
-
+DATA FLOW:
+  View (@State) --> ViewModel (@Published) --> Service (Actor) --> API
+                          ^
+                    NotificationCenter (cross-view updates)
 
 ================================================================================
 3. COMPONENT ARCHITECTURE
 ================================================================================
 
-3.1 Directory Structure
------------------------
-Scandalicious/
+FOLDER STRUCTURE:
+-----------------
+/Scandalicious/
 ├── App/
-│   └── DobbyApp.swift              # @main entry point
+│   └── DobbyApp.swift                 # Main entry point
 ├── Config/
-│   └── env.swift                   # Environment configuration
-├── Views/
-│   ├── Auth/
-│   │   ├── LoginView.swift         # Sign in UI
-│   │   └── OnboardingView.swift    # New user flow
-│   ├── Main/
-│   │   ├── ContentView.swift       # Tab container
-│   │   ├── OverviewView.swift      # Analytics dashboard (1800+ lines)
-│   │   ├── ScannerView.swift       # Camera capture
-│   │   └── MiloAIChatView.swift    # AI chat interface
-│   ├── Components/
-│   │   ├── TransactionRow.swift    # List item view
-│   │   ├── CategoryCard.swift      # Spending category display
-│   │   └── PeriodSelector.swift    # Date range picker
-│   ├── Profile/
-│   │   ├── ProfileView.swift       # User settings
-│   │   └── SubscriptionView.swift  # StoreKit UI
-│   └── Receipts/
-│       └── ReceiptDetailView.swift # Individual receipt
-├── ViewModels/
-│   ├── AuthenticationManager.swift
-│   ├── AnalyticsViewModel.swift
-│   ├── SubscriptionManager.swift
-│   ├── StoreDataManager.swift
-│   └── TransactionManager.swift
-├── Services/
-│   ├── AnalyticsAPIService.swift   # Main API client
-│   ├── ReceiptUploadService.swift  # Receipt upload
-│   ├── MiloAIChatService.swift     # SSE chat streaming
-│   └── RateLimitManager.swift      # Rate limit state
+│   └── env.swift                      # Environment configuration
 ├── Models/
-│   ├── AnalyticsModels.swift       # API response types
-│   ├── UserProfile.swift           # User data model
-│   └── Transaction.swift           # Transaction model
+│   ├── AnalyticsModels.swift          # Analytics data structures
+│   ├── ReceiptModels.swift            # Receipt models
+│   ├── TransactionModel.swift         # Transaction entities
+│   ├── StoreBreakdownModel.swift      # Store aggregation
+│   └── UserProfile.swift              # User profile
+├── ViewModels/
+│   ├── AuthenticationManager.swift    # Auth state & Firebase
+│   ├── AnalyticsViewModel.swift       # Analytics presentation
+│   ├── ReceiptUploadViewModel.swift   # Upload state machine
+│   └── ReceiptsViewModel.swift        # Receipt list management
+├── Services/
+│   ├── AnalyticsAPIService.swift      # Analytics API (actor)
+│   ├── ReceiptUploadService.swift     # Upload with multipart
+│   ├── ProfileAPIService.swift        # Profile CRUD
+│   ├── MiloAIChatService.swift        # AI chat with SSE
+│   ├── RateLimitManager.swift         # Rate limiting
+│   ├── SubscriptionManager.swift      # StoreKit 2
+│   ├── KeychainHelper.swift           # Secure token storage
+│   └── InsightService.swift           # Insight generation
+├── Views/
+│   ├── Auth/                          # Login, Paywall
+│   ├── Main/                          # ContentView, Overview, Profile
+│   ├── Receipt/                       # Scanning, Details, List
+│   ├── Chat/                          # AI Chat interface
+│   ├── Store/                         # Store breakdown views
+│   ├── Transaction/                   # Transaction views
+│   ├── Onboarding/                    # First-time setup
+│   └── Components/                    # Reusable UI components
 ├── Extensions/
-│   ├── CategoryColorExtension.swift
-│   ├── DateExtensions.swift
-│   └── ColorExtensions.swift
-└── Helpers/
-    └── KeychainHelper.swift        # Secure storage
+│   ├── CategoryColorExtension.swift   # Category coloring logic
+│   └── HealthScoreHelpers.swift       # Health score utilities
+└── Resources/
+    └── Assets.xcassets/               # Images and icons
 
-3.2 View Composition Pattern
-----------------------------
-File: Scandalicious/Views/Main/OverviewView.swift (1817 lines)
-
-Large views broken into computed properties for organization:
-
-    struct OverviewView: View {
-        @StateObject private var viewModel = AnalyticsViewModel()
-        @EnvironmentObject var authManager: AuthenticationManager
-
-        var body: some View {
-            NavigationStack {
-                ScrollView {
-                    VStack(spacing: 20) {
-                        headerSection
-                        summaryCards
-                        categoryBreakdownSection
-                        storeBreakdownSection
-                        recentTransactionsSection
-                    }
-                }
-            }
-        }
-
-        // MARK: - Header Section
-        private var headerSection: some View {
-            VStack { ... }
-        }
-
-        // MARK: - Summary Cards
-        private var summaryCards: some View {
-            HStack { ... }
-        }
-
-        // MARK: - Category Breakdown
-        private var categoryBreakdownSection: some View {
-            VStack { ... }
-        }
-    }
-
-3.3 Reusable Components
+COMPONENT ORGANIZATION:
 -----------------------
+Feature-based folders under Views/:
+- Auth/          - Authentication screens
+- Main/          - Primary app screens (tabs)
+- Receipt/       - Receipt scanning & management
+- Chat/          - AI assistant
+- Store/         - Store analytics
+- Transaction/   - Transaction history
+- Onboarding/    - User onboarding
+- Components/    - Shared UI components
 
-TransactionRow:
-    struct TransactionRow: View {
-        let transaction: Transaction
-
-        var body: some View {
-            HStack {
-                CategoryIcon(category: transaction.category)
-                VStack(alignment: .leading) {
-                    Text(transaction.description)
-                    Text(transaction.date.formatted())
-                }
-                Spacer()
-                Text(transaction.amount.formatted(.currency(code: "EUR")))
-            }
-        }
-    }
-
-Custom Button Styles:
-    struct PrimaryButtonStyle: ButtonStyle {
-        func makeBody(configuration: Configuration) -> some View {
-            configuration.label
-                .padding()
-                .background(Color.accentColor)
-                .foregroundColor(.white)
-                .cornerRadius(10)
-                .scaleEffect(configuration.isPressed ? 0.95 : 1.0)
-        }
-    }
-
-3.4 Share Extension
--------------------
-Directory: ShareExtension/
-
-Separate target for iOS Share Sheet integration:
-- ShareViewController.swift - Entry point
-- Uses App Group for data sharing with main app
-- Accesses auth token via Keychain/UserDefaults
-- Uploads receipts directly from share sheet
-
-App Group Identifier: "group.com.deepmaind.scandalicious"
-
+REUSABLE COMPONENTS (/Views/Components/):
+- DonutChartView.swift           # Spending breakdown charts
+- IconDonutChartView.swift       # Donut with category icons
+- HealthScoreBadge.swift         # Health score indicator
+- LiquidGaugeView.swift          # Animated gauge with motion
+- ReceiptUploadLimitView.swift   # Upload count display
+- SubscriptionBannerView.swift   # Subscription status
+- SyncLoadingView.swift          # Loading overlay
 
 ================================================================================
 4. STYLING SYSTEM
 ================================================================================
 
-4.1 Color Scheme
-----------------
-The app uses a dark-mode-first design with custom colors.
+THEME APPROACH:
+---------------
+- Dark mode preferred: .preferredColorScheme(.dark) set globally
+- Semantic colors based on health/category context
+- No external styling libraries - pure SwiftUI
 
-File: Scandalicious/Extensions/CategoryColorExtension.swift
+COLOR SCHEME:
+-------------
+Health Score Colors (HealthScoreHelpers.swift):
+  Score 5 (Great):  Vibrant green (0.2, 0.8, 0.4)
+  Score 4 (Good):   Light green
+  Score 3 (OK):     Yellow
+  Score 2 (Fair):   Orange
+  Score 1 (Poor):   Red-orange
+  Score 0 (Bad):    Red
 
-    extension Color {
-        // Brand Colors
-        static let appBackground = Color(red: 0.05, green: 0.05, blue: 0.08)
-        static let cardBackground = Color(red: 0.12, green: 0.12, blue: 0.15)
-        static let accentGreen = Color(red: 0.2, green: 0.8, blue: 0.4)
+Category Colors (CategoryColorExtension.swift):
+  - Health foods    -> Green tones
+  - Unhealthy items -> Red tones
+  - Alcohol         -> Deep wine red
+  - Meat & Fish     -> Orange/salmon
+  - Dairy           -> Light blue
+  - Bakery          -> Warm yellow/tan
+  - Household       -> Purple
+  - Personal Care   -> Pink
+  - Fallback        -> Hash-based dynamic coloring
 
-        // Category Colors (for spending categories)
-        static func forCategory(_ category: String) -> Color {
-            switch category.lowercased() {
-            case "groceries": return Color(red: 0.3, green: 0.7, blue: 0.4)
-            case "restaurants": return Color(red: 0.9, green: 0.5, blue: 0.3)
-            case "transport": return Color(red: 0.4, green: 0.6, blue: 0.9)
-            case "entertainment": return Color(red: 0.8, green: 0.4, blue: 0.7)
-            case "shopping": return Color(red: 0.9, green: 0.7, blue: 0.3)
-            case "health": return Color(red: 0.4, green: 0.8, blue: 0.8)
-            default: return Color.gray
-            }
-        }
-    }
+SPACING & SIZING:
+-----------------
+  Corner Radius:
+    - Cards: 14-16px
+    - Input fields: 12px
+    - Buttons: 12-14px
 
-4.2 Typography
---------------
-System fonts with semantic sizing:
+  Spacing:
+    - Vertical: 8px, 16px, 24px, 32px
+    - Horizontal padding: 16px, 24px
+    - List row spacing: 12px
 
-    .font(.largeTitle)           // Main headings
-    .font(.title)                // Section headers
-    .font(.title2)               // Subsection headers
-    .font(.headline)             // Emphasized text
-    .font(.body)                 // Default content
-    .font(.callout)              // Secondary content
-    .font(.caption)              // Labels, timestamps
-    .font(.caption2)             // Smallest text
-
-Custom font weights:
-    .fontWeight(.bold)
-    .fontWeight(.semibold)
-    .fontWeight(.medium)
-
-4.3 Component Styling Patterns
-------------------------------
-
-Card Style:
-    .background(Color.cardBackground)
-    .cornerRadius(16)
-    .shadow(color: .black.opacity(0.2), radius: 8, x: 0, y: 4)
-
-List Row Style:
-    .listRowBackground(Color.cardBackground)
-    .listRowSeparatorTint(.gray.opacity(0.3))
-
-Button Styles:
-    // Primary action
-    .buttonStyle(.borderedProminent)
-    .tint(.accentGreen)
-
-    // Secondary action
-    .buttonStyle(.bordered)
-
-    // Destructive action
-    .tint(.red)
-
-4.4 Dark Mode Implementation
-----------------------------
-File: Scandalicious/Views/Main/ContentView.swift
-
-    var body: some View {
-        TabView(selection: $selectedTab) {
-            // Tab content
-        }
-        .preferredColorScheme(.dark)  // Force dark mode
-        .tint(.accentGreen)           // Global accent color
-    }
-
-Background colors use low-luminance values:
-- App background: RGB(13, 13, 20) - near black
-- Card background: RGB(31, 31, 38) - dark gray
-- Elevated surfaces: RGB(45, 45, 52) - lighter gray
-
-4.5 Responsive Layout
----------------------
-GeometryReader for adaptive layouts:
-
-    GeometryReader { geometry in
-        let cardWidth = (geometry.size.width - 48) / 2
-
-        HStack(spacing: 16) {
-            SummaryCard(width: cardWidth)
-            SummaryCard(width: cardWidth)
-        }
-    }
-
-Safe area handling:
-    .safeAreaInset(edge: .bottom) {
-        // Bottom action bar
-    }
-
+TYPOGRAPHY:
+-----------
+  - System fonts with semantic sizes
+  - .largeTitle, .title, .headline, .subheadline
+  - Font weights: semibold, regular, light
 
 ================================================================================
 5. API INTERACTION LAYER
 ================================================================================
 
-5.1 Service Architecture
-------------------------
-API services use Swift's actor model for thread safety.
+ARCHITECTURE: Actor-based services for thread-safe networking
 
-File: Scandalicious/Services/AnalyticsAPIService.swift
+ENVIRONMENT CONFIGURATION (Config/env.swift):
+---------------------------------------------
+  #if PRODUCTION
+      static let backendBaseURL = "https://scandalicious-api-production.up.railway.app"
+  #else
+      static let backendBaseURL = "https://scandalicious-api-non-prod.up.railway.app"
+  #endif
 
-    actor AnalyticsAPIService {
-        static let shared = AnalyticsAPIService()
+  static let apiVersion = "v2"
+  static var apiBase: String { "\(backendBaseURL)/api/\(apiVersion)" }
 
-        private var baseURL: String { AppConfiguration.apiBase }
+KEY ENDPOINTS:
+  - apiBase/analytics/trends
+  - apiBase/analytics/categories
+  - apiBase/analytics/summary
+  - apiBase/receipts/upload
+  - apiBase/chat/stream
+  - apiBase/rate-limit
 
-        // Actor-isolated methods
-        func fetchAnalytics(for period: String, authToken: String) async throws -> AnalyticsResponse
-        func fetchCategoryBreakdown(for period: String, authToken: String) async throws -> [CategorySpending]
-        func fetchStoreBreakdown(for period: String, authToken: String) async throws -> [StoreSpending]
-        func fetchTransactions(for period: String, authToken: String) async throws -> [Transaction]
+API SERVICES (All Actor-based):
+-------------------------------
+AnalyticsAPIService (Services/AnalyticsAPIService.swift):
+  - fetchTrends(periodType, numPeriods)
+  - fetchCategories(filters)
+  - fetchSummary(filters)
+  - fetchStoreDetails(storeName, filters)
+  - fetchTransactions(filters)
+  - fetchReceipts(filters)
+  - removeReceipt(receiptId)
 
-        // Nonisolated wrappers for SwiftUI (runs on MainActor)
-        nonisolated func fetchAnalyticsNonisolated(...) async throws -> AnalyticsResponse {
-            try await self.fetchAnalytics(...)
-        }
-    }
+ReceiptUploadService (Services/ReceiptUploadService.swift):
+  - uploadReceipt(image: UIImage)
+  - uploadPDFReceipt(from: URL)
+  - Multipart form-data encoding
 
-5.2 Request Pattern
--------------------
-Standard async/await with URLSession:
+ProfileAPIService (Services/ProfileAPIService.swift):
+  - getProfile()
+  - updateProfile(firstName, lastName, gender)
 
-    func fetchAnalytics(for period: String, authToken: String) async throws -> AnalyticsResponse {
-        guard let url = URL(string: "\(baseURL)/analytics?period=\(period)") else {
-            throw APIError.invalidURL
-        }
+MiloAIChatService (Services/MiloAIChatService.swift):
+  - sendMessageStreaming() -> AsyncThrowingStream<String>
+  - Server-Sent Events (SSE) streaming
 
-        var request = URLRequest(url: url)
-        request.httpMethod = "GET"
-        request.setValue("Bearer \(authToken)", forHTTPHeaderField: "Authorization")
-        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+HTTP CLIENT:
+------------
+  - URLSession.shared for standard requests
+  - URLSession.shared.bytes for streaming
+  - Headers:
+    - Authorization: Bearer {firebase_token}
+    - Content-Type: application/json | multipart/form-data
 
-        let (data, response) = try await URLSession.shared.data(for: request)
-
-        guard let httpResponse = response as? HTTPURLResponse else {
-            throw APIError.invalidResponse
-        }
-
-        // Update rate limit state from headers
-        await MainActor.run {
-            RateLimitManager.shared.updateFromHeaders(httpResponse.allHeaderFields)
-        }
-
-        switch httpResponse.statusCode {
-        case 200...299:
-            return try JSONDecoder().decode(AnalyticsResponse.self, from: data)
-        case 401:
-            throw APIError.unauthorized
-        case 429:
-            throw APIError.rateLimitExceeded
-        default:
-            throw APIError.serverError(httpResponse.statusCode)
-        }
-    }
-
-5.3 Receipt Upload (Multipart Form Data)
-----------------------------------------
-File: Scandalicious/Services/ReceiptUploadService.swift
-
-    actor ReceiptUploadService {
-        static let shared = ReceiptUploadService()
-
-        func uploadReceipt(image: UIImage) async throws -> ReceiptUploadResponse {
-            let idToken = try await getAuthToken()
-
-            guard let imageData = image.jpegData(compressionQuality: 1.0) else {
-                throw ReceiptUploadError.noImage
-            }
-
-            let boundary = UUID().uuidString
-            var body = Data()
-
-            // Build multipart form
-            body.append("--\(boundary)\r\n")
-            body.append("Content-Disposition: form-data; name=\"file\"; filename=\"receipt.jpg\"\r\n")
-            body.append("Content-Type: image/jpeg\r\n\r\n")
-            body.append(imageData)
-            body.append("\r\n--\(boundary)--\r\n")
-
-            var request = URLRequest(url: URL(string: uploadURL)!)
-            request.httpMethod = "POST"
-            request.setValue("multipart/form-data; boundary=\(boundary)", forHTTPHeaderField: "Content-Type")
-            request.setValue("Bearer \(idToken)", forHTTPHeaderField: "Authorization")
-            request.httpBody = body
-            request.timeoutInterval = 90  // Extended for AI processing
-
-            return try await performUpload(request: request)
-        }
-    }
-
-5.4 SSE Streaming (Chat)
-------------------------
-File: Scandalicious/Services/MiloAIChatService.swift
-
-Server-Sent Events for real-time chat:
-
-    actor MiloAIChatService {
-        func streamChat(
-            message: String,
-            conversationHistory: [[String: String]],
-            authToken: String
-        ) -> AsyncThrowingStream<ChatStreamEvent, Error> {
-
-            AsyncThrowingStream { continuation in
-                Task {
-                    var request = URLRequest(url: URL(string: chatStreamEndpoint)!)
-                    request.httpMethod = "POST"
-                    request.setValue("Bearer \(authToken)", forHTTPHeaderField: "Authorization")
-                    request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-                    request.httpBody = try JSONEncoder().encode(ChatRequest(
-                        message: message,
-                        conversationHistory: conversationHistory
-                    ))
-
-                    let (bytes, response) = try await URLSession.shared.bytes(for: request)
-
-                    for try await line in bytes.lines {
-                        guard line.hasPrefix("data: ") else { continue }
-                        let jsonString = String(line.dropFirst(6))
-
-                        if let data = jsonString.data(using: .utf8),
-                           let event = try? JSONDecoder().decode(SSEEvent.self, from: data) {
-                            switch event.type {
-                            case "text":
-                                continuation.yield(.text(event.content ?? ""))
-                            case "done":
-                                continuation.finish()
-                            case "error":
-                                continuation.finish(throwing: ChatError.serverError(event.error ?? ""))
-                            default:
-                                break
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-5.5 Authentication Token Management
------------------------------------
-File: Scandalicious/Services/ReceiptUploadService.swift (getAuthToken method)
-
-Multi-fallback token retrieval:
-
-    private func getAuthToken() async throws -> String {
-        let appGroupIdentifier = "group.com.deepmaind.scandalicious"
-
-        // Method 1: Direct Firebase Auth
-        if let user = Auth.auth().currentUser {
-            let token = try await user.getIDToken()
-            KeychainHelper.shared.saveToken(token)
-            return token
-        }
-
-        // Method 2: Keychain (most reliable for sharing)
-        if let token = KeychainHelper.shared.retrieveToken() {
-            return token
-        }
-
-        // Method 3-5: App Group UserDefaults (various keys)
-        if let sharedDefaults = UserDefaults(suiteName: appGroupIdentifier) {
-            for key in ["SCANDALICIOUS_AUTH_TOKEN", "firebase_auth_token", "auth_token"] {
-                if let token = sharedDefaults.string(forKey: key) {
-                    return token
-                }
-            }
-        }
-
-        throw ReceiptUploadError.noAuthToken
-    }
-
-5.6 Error Handling
-------------------
-Custom error enums with user-friendly messages:
-
-    enum ReceiptUploadError: LocalizedError {
-        case noImage
-        case invalidResponse
-        case noAuthToken
-        case serverError(String)
-        case networkError(Error)
-        case rateLimitExceeded(ReceiptRateLimitExceededError)
-        case deleteFailed(String)
-
-        var errorDescription: String? {
-            switch self {
-            case .rateLimitExceeded(let error):
-                return error.message
-            case .serverError(let message):
-                return "Server error: \(message)"
-            // ... etc
-            }
-        }
-
-        var rateLimitUserMessage: String? {
-            guard case .rateLimitExceeded(let error) = self else { return nil }
-            let daysUntilReset = Calendar.current.dateComponents(
-                [.day], from: Date(), to: error.details.periodEndDate
-            ).day ?? 0
-            return "You've used all \(error.details.receiptsLimit) uploads this month. Resets in \(daysUntilReset) days."
-        }
-    }
-
+ERROR HANDLING:
+---------------
+  enum AnalyticsAPIError: LocalizedError {
+      case invalidURL
+      case noAuthToken
+      case unauthorized
+      case notFound
+      case serverError(String)
+      case decodingError(String)
+      case networkError(Error)
+      case invalidResponse
+  }
 
 ================================================================================
-6. ROUTING & NAVIGATION
+6. ROUTING & GUARDS
 ================================================================================
 
-6.1 Tab-Based Navigation
-------------------------
-File: Scandalicious/Views/Main/ContentView.swift
-
-Root navigation using TabView:
-
-    struct ContentView: View {
-        @State private var selectedTab = 0
-        @StateObject private var storeDataManager = StoreDataManager()
-        @StateObject private var transactionManager = TransactionManager()
-
-        var body: some View {
-            TabView(selection: $selectedTab) {
-                OverviewView()
-                    .tabItem {
-                        Label("View", systemImage: "chart.pie.fill")
-                    }
-                    .tag(0)
-
-                ScannerView()
-                    .tabItem {
-                        Label("Scan", systemImage: "camera.fill")
-                    }
-                    .tag(1)
-
-                MiloAIChatView()
-                    .tabItem {
-                        Label("Milo", systemImage: "bubble.left.and.bubble.right.fill")
-                    }
-                    .tag(2)
-            }
-            .environmentObject(storeDataManager)
-            .environmentObject(transactionManager)
-        }
-    }
-
-6.2 NavigationStack Pattern
----------------------------
-File: Scandalicious/Views/Main/OverviewView.swift
-
-Programmatic navigation with NavigationStack:
-
-    struct OverviewView: View {
-        @State private var navigationPath = NavigationPath()
-        @State private var selectedReceipt: Receipt?
-        @State private var showingReceiptDetail = false
-
-        var body: some View {
-            NavigationStack(path: $navigationPath) {
-                ScrollView {
-                    // Content
-                }
-                .navigationTitle("Overview")
-                .navigationDestination(for: Receipt.self) { receipt in
-                    ReceiptDetailView(receipt: receipt)
-                }
-                .navigationDestination(for: Transaction.self) { transaction in
-                    TransactionDetailView(transaction: transaction)
-                }
-            }
-        }
-    }
-
-6.3 Modal Presentations
------------------------
-Sheet (partial cover):
-    .sheet(isPresented: $showingSettings) {
-        SettingsView()
-    }
-
-Full screen cover:
-    .fullScreenCover(isPresented: $showingOnboarding) {
-        OnboardingView()
-    }
-
-Confirmation dialogs:
-    .confirmationDialog("Delete Receipt?", isPresented: $showingDeleteConfirmation) {
-        Button("Delete", role: .destructive) {
-            deleteReceipt()
-        }
-        Button("Cancel", role: .cancel) { }
-    }
-
-6.4 Authentication Guard
-------------------------
-File: Scandalicious/App/DobbyApp.swift
-
-Root-level auth guard:
-
-    var body: some Scene {
-        WindowGroup {
-            Group {
-                if authManager.isLoading {
-                    LoadingView()
-                } else if authManager.isAuthenticated {
-                    ContentView()
-                        .environmentObject(authManager)
-                } else {
-                    LoginView()
-                        .environmentObject(authManager)
-                }
-            }
-        }
-    }
-
-6.5 Deep Linking
+NAVIGATION FLOW:
 ----------------
-URL scheme handling in AppDelegate:
+  User Not Authenticated -> LoginView
+           |
+  User Authenticated, Profile Incomplete -> OnboardingView
+           |
+  User Authenticated, Profile Complete -> ContentView (Tab View)
 
-    func application(_ app: UIApplication, open url: URL, options: [...]) -> Bool {
-        // Handle Firebase auth callbacks
-        if Auth.auth().canHandle(url) {
-            return true
-        }
+MAIN TAB NAVIGATION (ContentView.swift):
+----------------------------------------
+  Tab 1: View (chart.pie.fill)
+    - OverviewView -> Period selector -> Store breakdown
+    - TransactionListView with filtering
+    - StoreDetailView
 
-        // Handle custom deep links
-        if url.scheme == "scandalicious" {
-            handleDeepLink(url)
-            return true
-        }
+  Tab 2: Scan (qrcode.viewfinder)
+    - ReceiptScanView (main entry)
+    - CustomCameraView (camera)
+    - ReceiptDetailsView (sheet)
+    - SavedReceiptsView (list)
 
-        return false
-    }
+  Tab 3: Milo (sparkles)
+    - ScandaLiciousAIChatView
+    - Chat interface with history
 
+NAVIGATION IMPLEMENTATION:
+--------------------------
+  - NavigationStack (iOS 16+)
+  - .sheet() for modals
+  - .fullScreenCover() for camera
+  - .navigationDestination() for conditional navigation
+
+AUTH GUARD (DobbyApp.swift):
+----------------------------
+  @StateObject var authManager = AuthenticationManager()
+
+  var body: some Scene {
+      WindowGroup {
+          if authManager.isAuthenticated {
+              if authManager.profileCompleted {
+                  ContentView()
+              } else {
+                  OnboardingView()
+              }
+          } else {
+              LoginView()
+          }
+      }
+      .environmentObject(authManager)
+  }
 
 ================================================================================
 7. FORM & VALIDATION LOGIC
 ================================================================================
 
-7.1 Login Form
---------------
-File: Scandalicious/Views/Auth/LoginView.swift
-
-    struct LoginView: View {
-        @EnvironmentObject var authManager: AuthenticationManager
-        @State private var email = ""
-        @State private var password = ""
-        @State private var isLoading = false
-        @State private var showingError = false
-        @State private var errorMessage = ""
-
-        var isFormValid: Bool {
-            !email.isEmpty && email.contains("@") && password.count >= 6
-        }
-
-        var body: some View {
-            VStack(spacing: 20) {
-                TextField("Email", text: $email)
-                    .textContentType(.emailAddress)
-                    .keyboardType(.emailAddress)
-                    .autocapitalization(.none)
-                    .textFieldStyle(.roundedBorder)
-
-                SecureField("Password", text: $password)
-                    .textContentType(.password)
-                    .textFieldStyle(.roundedBorder)
-
-                Button("Sign In") {
-                    signIn()
-                }
-                .disabled(!isFormValid || isLoading)
-                .buttonStyle(.borderedProminent)
-
-                // Social sign-in options
-                SignInWithAppleButton()
-                GoogleSignInButton()
-            }
-            .alert("Error", isPresented: $showingError) {
-                Button("OK") { }
-            } message: {
-                Text(errorMessage)
-            }
-        }
-
-        private func signIn() {
-            isLoading = true
-            Task {
-                do {
-                    try await authManager.signIn(email: email, password: password)
-                } catch {
-                    errorMessage = error.localizedDescription
-                    showingError = true
-                }
-                isLoading = false
-            }
-        }
-    }
-
-7.2 Profile Form
-----------------
-File: Scandalicious/Views/Profile/ProfileEditView.swift
-
-    struct ProfileEditView: View {
-        @Environment(\.dismiss) var dismiss
-        @State private var firstName: String
-        @State private var lastName: String
-        @State private var selectedGender: Gender?
-        @State private var isSaving = false
-
-        var hasChanges: Bool {
-            firstName != originalFirstName ||
-            lastName != originalLastName ||
-            selectedGender != originalGender
-        }
-
-        var body: some View {
-            Form {
-                Section("Personal Information") {
-                    TextField("First Name", text: $firstName)
-                        .textContentType(.givenName)
-
-                    TextField("Last Name", text: $lastName)
-                        .textContentType(.familyName)
-
-                    Picker("Gender", selection: $selectedGender) {
-                        Text("Not specified").tag(nil as Gender?)
-                        ForEach(Gender.allCases, id: \.self) { gender in
-                            Text(gender.displayName).tag(gender as Gender?)
-                        }
-                    }
-                }
-            }
-            .toolbar {
-                ToolbarItem(placement: .confirmationAction) {
-                    Button("Save") {
-                        saveProfile()
-                    }
-                    .disabled(!hasChanges || isSaving)
-                }
-            }
-            .interactiveDismissDisabled(hasChanges)
-        }
-    }
-
-7.3 Text Input Modifiers
-------------------------
-SwiftUI provides semantic text content types:
-
-    // Email
-    .textContentType(.emailAddress)
-    .keyboardType(.emailAddress)
-    .autocapitalization(.none)
-    .autocorrectionDisabled()
-
-    // Password
-    .textContentType(.password)  // or .newPassword for registration
-
-    // Name
-    .textContentType(.givenName)  // or .familyName
-    .autocapitalization(.words)
-
-    // Phone
-    .textContentType(.telephoneNumber)
-    .keyboardType(.phonePad)
-
-    // Currency
-    .keyboardType(.decimalPad)
-
-7.4 Validation Patterns
+FORM HANDLING APPROACH:
 -----------------------
-Computed property validation:
+  - Native SwiftUI @State bindings
+  - No external form library (React Hook Form equivalent)
+  - Validation via computed properties
 
-    var isEmailValid: Bool {
-        let emailRegex = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,64}"
-        return NSPredicate(format: "SELF MATCHES %@", emailRegex)
-            .evaluate(with: email)
+ONBOARDING FORM (Views/Onboarding/OnboardingView.swift):
+--------------------------------------------------------
+  Fields:
+    - firstName: TextField with .givenName contentType
+    - lastName: TextField with .familyName contentType
+    - gender: Picker with 3 options
+
+  Validation:
+    var canContinue: Bool {
+        !firstName.isEmpty && !lastName.isEmpty
     }
 
-    var isPasswordValid: Bool {
-        password.count >= 8 &&
-        password.rangeOfCharacter(from: .uppercaseLetters) != nil &&
-        password.rangeOfCharacter(from: .decimalDigits) != nil
-    }
+  Submission:
+    ProfileAPIService.updateProfile(userId, firstName, lastName, gender)
 
-Real-time feedback:
+LOGIN FORM (Views/Auth/LoginView.swift):
+----------------------------------------
+  Fields:
+    - email: TextField with .emailAddress contentType
+    - password: SecureField
 
-    TextField("Email", text: $email)
-        .overlay(alignment: .trailing) {
-            if !email.isEmpty {
-                Image(systemName: isEmailValid ? "checkmark.circle.fill" : "xmark.circle.fill")
-                    .foregroundColor(isEmailValid ? .green : .red)
-            }
-        }
+  State:
+    @State private var email = ""
+    @State private var password = ""
+    @State private var isLoading = false
+    @State private var errorMessage = ""
 
-7.5 Error Display
+  Auth Methods:
+    1. Email/password via Firebase Auth
+    2. Google Sign-In (GoogleSignIn framework)
+    3. Apple Sign-In (AuthenticationServices)
+
+  Validation:
+    - Email format validated by Firebase
+    - Password strength server-side
+    - Error display with .red color
+
+================================================================================
+8. AUTHENTICATION FLOW
+================================================================================
+
+PROVIDERS:
+----------
+  - Firebase Authentication (primary)
+  - Google Sign-In with OAuth
+  - Apple Sign-In with AuthenticationServices
+  - Email/password credentials
+
+AUTHENTICATION MANAGER (ViewModels/AuthenticationManager.swift):
+----------------------------------------------------------------
+  class AuthenticationManager: ObservableObject {
+      @Published var user: User?
+      @Published var profileCompleted: Bool = false
+      @Published var isCheckingProfile: Bool = true
+
+      var isAuthenticated: Bool { user != nil }
+  }
+
+TOKEN MANAGEMENT:
 -----------------
-Alert dialogs:
-    .alert("Error", isPresented: $showingError) {
-        Button("OK", role: .cancel) { }
-    } message: {
-        Text(errorMessage)
-    }
+  On Login:    saveTokenToSharedStorage()
+  On App Wake: refreshTokenInSharedStorage()
+  On Logout:   clearTokenFromSharedStorage()
 
-Inline errors:
-    if let error = validationError {
-        Text(error)
-            .font(.caption)
-            .foregroundColor(.red)
-    }
+TOKEN STORAGE (for Share Extension):
+------------------------------------
+  1. KeychainHelper.shared.saveToken()
+  2. UserDefaults(suiteName: "group.com.deepmaind.scandalicious")
 
-Toast notifications (custom):
-    .overlay(alignment: .top) {
-        if showingToast {
-            ToastView(message: toastMessage, type: toastType)
-                .transition(.move(edge: .top).combined(with: .opacity))
-        }
-    }
+KEYCHAIN HELPER (Services/KeychainHelper.swift):
+------------------------------------------------
+  Service: "com.deepmaind.scandalicious.auth"
+  Account: "firebase_token"
+  Accessibility: .afterFirstUnlock
 
+  Methods:
+    - saveToken(token: String)
+    - retrieveToken() -> String?
+    - deleteToken()
 
-================================================================================
-8. ADDITIONAL PATTERNS
-================================================================================
-
-8.1 Caching Strategy
+AUTH STATE LISTENER:
 --------------------
-Period-based caching in managers:
+  authStateHandle = Auth.auth().addStateDidChangeListener { [weak self] _, user in
+      self?.user = user
+      if let user = user {
+          Task { await self?.saveTokenToSharedStorage(for: user) }
+      }
+  }
 
-    class StoreDataManager: ObservableObject {
-        @Published var storeBreakdownCache: [String: [StoreSpending]] = [:]
+================================================================================
+9. THIRD-PARTY DEPENDENCIES
+================================================================================
 
-        func getStoreBreakdown(for period: String) -> [StoreSpending]? {
-            return storeBreakdownCache[period]
-        }
+SWIFT PACKAGE MANAGER (SPM):
+----------------------------
+Firebase SDK:
+  Repository: https://github.com/firebase/firebase-ios-sdk
+  Modules:
+    - FirebaseCore
+    - FirebaseAuth
 
-        func cacheStoreBreakdown(_ data: [StoreSpending], for period: String) {
-            storeBreakdownCache[period] = data
-        }
-    }
+Google Sign-In:
+  Repository: https://github.com/google/GoogleSignIn-iOS
+  Modules:
+    - GoogleSignIn
+    - GoogleSignInSwift
 
-8.2 Gesture Handling
+BUILT-IN FRAMEWORKS:
 --------------------
-Period navigation with swipe gestures:
+  - StoreKit 2      - In-app subscriptions
+  - CoreMotion      - Accelerometer/gyroscope
+  - AVFoundation    - Camera capture
+  - AuthenticationServices - Apple Sign-In
+  - Security        - Keychain access
 
-    .gesture(
-        DragGesture()
-            .onEnded { gesture in
-                if gesture.translation.width > 100 {
-                    // Swipe right - previous period
-                    navigateToPreviousPeriod()
-                } else if gesture.translation.width < -100 {
-                    // Swipe left - next period
-                    navigateToNextPeriod()
-                }
-            }
-    )
-
-8.3 Notification Handling
--------------------------
-Local notifications for receipts:
-
-    NotificationCenter.default.addObserver(
-        forName: .receiptUploaded,
-        object: nil,
-        queue: .main
-    ) { notification in
-        if let receipt = notification.object as? Receipt {
-            refreshData()
-        }
-    }
-
-8.4 App Lifecycle
------------------
-Scene phase monitoring:
-
-    @Environment(\.scenePhase) private var scenePhase
-
-    .onChange(of: scenePhase) { oldPhase, newPhase in
-        switch newPhase {
-        case .active:
-            refreshTokenIfNeeded()
-        case .background:
-            saveStateToCache()
-        case .inactive:
-            break
-        @unknown default:
-            break
-        }
-    }
-
+NO COCOAPODS - Pure SPM dependency management
 
 ================================================================================
-9. SPENDING CATEGORIES
+10. KEY FILES REFERENCE
 ================================================================================
 
-The app categorizes spending into 16 categories:
-- Meat & Fish
-- Alcohol
-- Dairy
-- Produce
-- Bakery
-- Beverages
-- Snacks
-- Frozen
-- Pantry
-- Household
-- Personal Care
-- Baby
-- Pets
-- Pharmacy
-- Other
-- Unknown
+ENTRY & CONFIG:
+  App/DobbyApp.swift              - App entry, Firebase config
+  Config/env.swift                - API endpoints, environment
 
-Each category has an associated:
-- Color (defined in CategoryColorExtension.swift)
-- Icon (SF Symbols)
-- Display name
+AUTHENTICATION:
+  ViewModels/AuthenticationManager.swift  - Auth state management
+  Services/KeychainHelper.swift           - Secure token storage
+  Views/Auth/LoginView.swift              - Login UI
 
+NETWORKING:
+  Services/AnalyticsAPIService.swift      - Analytics API (actor)
+  Services/ReceiptUploadService.swift     - Receipt upload
+  Services/MiloAIChatService.swift        - AI chat with SSE
+  Services/ProfileAPIService.swift        - Profile CRUD
 
-================================================================================
-10. EXTERNAL DEPENDENCIES
-================================================================================
+STATE MANAGEMENT:
+  Services/RateLimitManager.swift         - Rate limit tracking
+  Services/SubscriptionManager.swift      - StoreKit 2
 
-Swift Package Manager Dependencies:
-- Firebase iOS SDK (Auth, Firestore, Analytics)
-- GoogleSignIn-iOS
-- StoreKit 2 (native)
+MODELS:
+  Models/AnalyticsModels.swift            - Analytics structures
+  Models/ReceiptModels.swift              - Receipt structures
+  Models/TransactionModel.swift           - Transaction entities
+  Models/UserProfile.swift                - User data
 
-Firebase Project:
-- Project ID: dobby-dd70e
-- Bundle ID: com.deepmaind.Milo
+MAIN VIEWS:
+  Views/Main/ContentView.swift            - Tab navigation
+  Views/Main/OverviewView.swift           - Analytics dashboard
+  Views/Receipt/ReceiptScanView.swift     - Camera scanning
+  Views/Chat/MiloAIChatView.swift         - AI assistant
 
-App Group:
-- Identifier: group.com.deepmaind.scandalicious
-- Used for: Share Extension data sharing
-
+EXTENSIONS:
+  Extensions/CategoryColorExtension.swift - Category coloring
+  Extensions/HealthScoreHelpers.swift     - Health score utils
 
 ================================================================================
-                              END OF DOCUMENT
+11. ARCHITECTURAL PATTERNS
+================================================================================
+
+ACTOR-BASED CONCURRENCY:
+------------------------
+  actor AnalyticsAPIService {
+      static let shared = AnalyticsAPIService()
+      private init() {}
+      func fetchTrends(...) async throws -> TrendsResponse { }
+  }
+
+LOADING STATE PATTERN:
+----------------------
+  enum LoadingState<T> {
+      case idle, loading, success(T), error(String)
+      var isLoading: Bool { ... }
+      var error: String? { ... }
+      var value: T? { ... }
+  }
+
+ASYNC STREAMING (SSE):
+----------------------
+  func sendMessageStreaming(...) -> AsyncThrowingStream<String, Error> {
+      AsyncThrowingStream { continuation in
+          // Handle Server-Sent Events
+      }
+  }
+
+NOTIFICATION PATTERN:
+---------------------
+  NotificationCenter.default.post(name: .receiptsDataDidChange, object: nil)
+
+================================================================================
+12. BUILD CONFIGURATION
+================================================================================
+
+SCHEMES:
+  - Debug (non-prod backend)
+  - Release/Production (prod backend)
+
+ENTITLEMENTS (Scandalicious.entitlements):
+  - App Groups: group.com.deepmaind.scandalicious
+  - Sign in with Apple
+  - Push Notifications (future)
+
+FIREBASE CONFIG:
+  - GoogleService-Info.plist (Firebase credentials)
+  - Configured in DobbyApp.swift on launch
+
+SHARE EXTENSION:
+  - ScandaliciousShareExtension/
+  - Shares token via App Group
+  - Allows quick receipt scanning from other apps
+
+================================================================================
+                              END OF CONTEXT
 ================================================================================
