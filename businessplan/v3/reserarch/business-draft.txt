@@ -1,0 +1,393 @@
+Milo Grocery Budgeting and Grocery Data Panelist App (IOS/Android)
+
+- Clean sleek and premium feeling UX
+- Upload Receipts, Share receipts via share extension, gemini auto-categorises all line items for group category, category, sub cateogry
+- Set and Track Budget on all groceries categories.
+- Grocery stores receipts tracker and manager
+- Clean data visualiston on spending across grocery categories and spending accros stores across monthly periods
+- Auto Nutri score categorization on line item level
+- Receipt line items expense splitter (Split with friends)
+- Wallet Pass creator for store loyalty cards
+- Milo AI chat to chat and gain insights across all your groceries transactional data (Gemini Flash)
+- Relevant Promotions finder across all stores based on historical purchase data (Relevant promotions deals for efficient promo hunting)
+- Cashback Rewards for uploadung receipts
+- Weekly ticket for lottery roulette spin with grand cashprice, tickets/chance depends on actual receipts scanned this week
+
+- User Profile (Nickname, age, gender, household size)
+
+
+Milo Backend (Railway)
+
+- Infrastructure hostend on Railway (Fast API, PostgreSQL)
+- Receipt upload line item categoristation + Nutri Score -> Gemini Flash
+- Promotion hunting across stores -> Gemini 3 pro
+- Milo AI chat -> Gemini Flash
+
+Milo Data Platform
+
+- Data Warehouse (Snowflake)
+
+Milo Data Products
+
+The core B2B revenue engine. Milo collects receipt-level grocery data from Belgian consumers
+(items, brands, prices, stores, categories, Nutri-Scores, timestamps). This data is aggregated,
+anonymized, and packaged into data products sold to FMCG brands, retailers, research agencies,
+and financial services firms.
+
+USP: The only affordable, cross-retailer consumer panel in Belgium.
+- YouGov/GfK panel: 6,000 Belgian households, EUR 100K+/year contracts. Only top brands can afford it.
+- Colruyt Insights: 3M households but Colruyt-only (blind to 74% of the market).
+- Delhaize Enlight+: Delhaize-only (blind to 77% of the market).
+- Carrefour Links: Carrefour-only (blind to 82% of the market).
+- Milo: Cross-retailer. Full basket. Affordable. GDPR-compliant first-party data.
+
+Comparable companies:
+- NielsenIQ Byzzer (USA): SMB data platform, $4,950-$10,000/year, 15+ report types
+- Circana Liquid Data Go: 20 curated reports for SMBs, ~$5K-$15K/year
+- Ibotta (USA): $367M revenue in 2024 (87% from redemption commissions + data licensing)
+- Fetch Rewards (USA): 11M receipts/day, $1B valuation, data licensing to 300+ brands
+- Foxintelligence (France): 600K e-receipt panel, acquired by NielsenIQ
+- Shopmium (France/UK/Belgium): receipt scanning, data partnership with Nielsen
+
+
+--- DATA PRODUCT #1: Milo Monthly Datamart (Foundation Product) ---
+
+What: Pre-aggregated monthly table. One row = one brand x one store x one category x one month.
+Grain: brand + store + granular_category + month
+Metrics per row: unique_buyers, panel_size, penetration_pct, purchase_frequency,
+avg_spend_per_buyer, total_spend, total_units, avg_unit_price, avg_price_per_unit_measure,
+category_share_pct, premium_spend_pct, discount_pct, avg_health_score, avg_basket_spend
+
+Dimensions: Time (month/quarter/year), Category (8 groups > 31 parent > ~200 granular),
+Store (retailer group > chain > type), Brand (name + private_label flag)
+
+Delivery: CSV/Excel file, monthly. Clients filter and pivot in Excel or their own BI tools.
+Target: SMB food brands who need simple, spreadsheet-friendly data.
+Price: EUR 200-600/month (EUR 2,400-7,200/year)
+
+
+--- DATA PRODUCT #2: Milo Brand Scorecard ---
+
+What: A simple, visual one-page brand performance report card.
+Composite score across 4 dimensions (like NielsenIQ Byzzer's Brand Score):
+  1. Market Position (category share, penetration vs. category average)
+  2. Pricing Health (price index vs. category, price gap vs. private label)
+  3. Loyalty Strength (repeat rate, purchase frequency, buyer retention)
+  4. Promotional Efficiency (promo share, lift vs. non-promo, discount depth)
+
+Each dimension scored 0-100 with trend arrows (up/down/flat vs. prior period).
+Benchmarked against category average and top 3 competitors.
+
+Delivery: PDF/PowerPoint, 1-2 pages. Designed to be presentation-ready for retailer meetings.
+Updated monthly.
+Target: SMB brands who need to pitch retailers (Colruyt, Delhaize, Carrefour) with data.
+Price: EUR 100-300/month (EUR 1,200-3,600/year)
+
+Example use case: A Belgian artisanal cheese maker walks into Colruyt's category buyer meeting
+with a Milo Brand Scorecard showing: "Premium hard cheese penetration at Colruyt is 14% but
+growing +2pt/quarter. Private label holds 39%, Barilla equivalent 21%. There's a clear gap
+for a Belgian artisanal brand at EUR 4-5."
+
+
+--- DATA PRODUCT #3: Category Trend Reports ---
+
+What: Monthly/quarterly category-level analysis showing:
+- Category size (total spend, total units, avg price)
+- Growth trends (vs. prior month, prior quarter, prior year)
+- Brand market shares (value and volume)
+- Private label vs. national brand share evolution
+- Price trends (inflation tracking, average price per kg/L)
+- Promotional intensity (% of volume sold on promo)
+- Top growing and declining brands
+- New product/brand entries detected
+
+Delivery: PDF report (20-30 pages) + interactive dashboard access.
+Categories: Dairy, Bakery, Beverages, Snacks, Household, Personal Care, Frozen, Fresh, etc.
+Target: Any brand or retailer wanting to understand a category.
+Price: EUR 500-1,500/month per category subscription (EUR 6,000-18,000/year)
+
+Syndicated version: "Belgian Grocery Market Quarterly Review" sold to multiple buyers.
+Price: EUR 3,000-8,000 per quarterly report.
+
+
+--- DATA PRODUCT #4: Cross-Retailer Price & Promotion Monitor ---
+
+What: Tracks ACTUAL prices paid (not shelf prices) and promotional activity across retailers.
+Unique because receipt data captures what consumers actually pay after discounts.
+
+Key metrics per brand/category/retailer:
+- Average price paid
+- Average promoted price vs. regular price
+- Promotional depth (% discount)
+- % of volume sold on promotion
+- Price index vs. category average
+- Cross-retailer price comparison (Colruyt vs. Delhaize vs. Lidl vs. Aldi vs. Carrefour)
+- Promotional calendar detection (when do promos happen)
+
+Delivery: Monthly dashboard + weekly data feed.
+Target: Brand pricing teams, revenue growth management (RGM) teams, key account managers.
+Price: EUR 300-800/month (EUR 3,600-9,600/year)
+
+Unique value: Colruyt guarantees "lowest price" — this data can verify whether that holds
+at the actual transaction level, and how competitors respond with promotions.
+
+
+--- DATA PRODUCT #5: Private Label Monitor ---
+
+What: Dedicated tracker for private label dynamics — the defining feature of Belgian grocery
+(Belgium has ~40% private label share, one of the highest in Europe).
+
+Tracks:
+- PL share by category by retailer (Boni at Colruyt vs. 365 at Delhaize vs. Carrefour brand)
+- PL share evolution over time (monthly trend)
+- Price gap between PL and equivalent national brands
+- Switching behavior: consumers moving from branded to PL (and vice versa)
+- PL new product detection
+- PL penetration by shopper segment (deal-seekers vs. brand-loyalists)
+
+Delivery: Monthly dashboard + quarterly deep-dive report.
+Target: National brand manufacturers (defensive intelligence), retailers' PL teams
+(competitive benchmarking), private label contract manufacturers.
+Price: EUR 400-1,000/month (EUR 4,800-12,000/year)
+
+
+--- DATA PRODUCT #6: Shopper Segmentation & Demographics ---
+
+What: Behavioral shopper segments derived from actual purchase data + app profile demographics.
+Segments created from receipt patterns:
+
+  - Deal Seekers: >50% of basket on promo, high brand switching for deals
+  - Brand Loyalists: >70% repeat rate for core brands, low price sensitivity
+  - Premium Shoppers: over-index on organic/premium/specialty, higher basket value
+  - Private Label Champions: >60% PL share in basket
+  - Health-Conscious / Bio Shoppers: over-index on Nutri-Score A/B, organic, plant-based
+  - Budget Constrained: small baskets, high PL, strong promo response, discounter-heavy
+  - Young Families: baby products, kids snacks, large weekend baskets
+
+Each segment profiled by: demographics (age, household size, postcode/region),
+retailer preference, basket composition, price sensitivity, top categories.
+
+Delivery: Segment profiles (PDF), raw segment flags in datamart, quarterly updates.
+Target: Brand marketing teams, media agencies, retailer CRM teams.
+Price: EUR 500-1,500/month (EUR 6,000-18,000/year)
+
+Enhanced version: Combine receipt data with in-app micro-surveys (2-3 questions per month)
+to add attitudinal data (similar to YouGov's FMCG Shopper Types model).
+
+
+--- DATA PRODUCT #7: Cross-Shopping & Retailer Loyalty Analysis ---
+
+What: THE unique product that only a cross-retailer panel can provide.
+Retailers cannot see this from their own loyalty data. Brands cannot see this from single-
+retailer platforms.
+
+Key metrics:
+- Store loyalty score (% of total grocery spend at primary store)
+- Retailer repertoire size (avg number of stores shopped per month)
+- Cross-shopping matrix (% overlap between retailer pairs)
+  Example: "35% of Colruyt shoppers also shop at Lidl. 67% of Boni buyers also shop at
+  Delhaize, and 54% of those buy 365 products there."
+- Category-specific cross-shopping (buys fresh at Colruyt, household at Action)
+- Channel migration tracking (hypermarket to discounter, offline to online)
+- Customer leakage analysis (for retailers: where are your customers also spending?)
+
+Delivery: Quarterly report + interactive dashboard.
+Target: Retailers (will pay premium — EUR 2,500-8,000/month), brand key account teams.
+Price: EUR 1,000-3,000/month for brands (EUR 12,000-36,000/year)
+       EUR 2,500-8,000/month for retailers (EUR 30,000-96,000/year)
+
+
+--- DATA PRODUCT #8: Basket & Cross-Purchase Analysis ---
+
+What: Market basket analysis showing product affinity — what gets bought together.
+
+Metrics:
+- Affinity scores between categories and brands
+- Basket composition by shopper segment
+- Avg basket size when category X is present
+- Cross-category purchase patterns
+- Meal occasion inference (e.g., pasta + sauce + cheese = Italian dinner)
+- Complementary product identification
+
+Delivery: Quarterly report + ad-hoc queries.
+Target: Category managers, brand teams, trade marketing.
+Price: EUR 300-800/month (EUR 3,600-9,600/year)
+
+
+--- DATA PRODUCT #9: Ad-Hoc Research Projects (Consulting Revenue) ---
+
+What: Custom research projects priced per engagement. These are high-margin, bespoke
+analyses that go deeper than standard subscription products.
+
+Project types and pricing:
+- Category review (full category analysis for retailer meeting): EUR 2,000-5,000
+- Competitive intelligence brief (deep-dive on a competitor): EUR 1,500-4,000
+- New product launch assessment (post-launch performance audit): EUR 2,000-5,000
+- Shopper profile study (detailed buyer profile for a brand): EUR 2,000-5,000
+- Promotional ROI audit (campaign effectiveness measurement): EUR 3,000-6,000
+- Price sensitivity study (elasticity analysis): EUR 3,000-8,000
+- Private label threat assessment: EUR 2,000-4,000
+- White space analysis (unserved need identification): EUR 3,000-6,000
+- Retailer-ready presentation pack (PowerPoint for listing meetings): EUR 500-2,000
+
+Delivery: PDF/PowerPoint report, 2-6 weeks turnaround.
+Target: Any brand or retailer with a specific business question.
+Revenue model: Project-based, not subscription. High margin (no ongoing delivery cost).
+
+
+--- DATA PRODUCT #10: Belgian Market Thematic Spotlights ---
+
+What: Syndicated reports on trending topics, sold to multiple buyers.
+Published quarterly or when a topic is timely.
+
+Examples:
+- "The Bio/Organic Shopper in Belgium" (Bio-Planet, organic trends, shopper profiles)
+- "Inflation Impact on Belgian Grocery Shopping" (trading down, brand-to-PL switching)
+- "Private Label: Threat or Opportunity?" (40% PL share deep-dive)
+- "The Rise of Plant-Based in Belgian Supermarkets"
+- "Nutri-Score Impact on Purchase Behavior"
+- "The Belgian Promo Addict: Who, What, Where?"
+- "Flanders vs. Wallonia: How Belgium's Regions Shop Differently"
+- "Convenience Shopping: Evening & Weekend Patterns"
+- "Who Wins the Young Family Basket?"
+
+Delivery: PDF, 20-30 pages. Branded Milo reports with data visualizations.
+Target: Broad market — brands, retailers, agencies, media, investors.
+Price: EUR 1,000-3,000 per report. Discount for annual subscriptions (all reports).
+
+
+--- DATA PRODUCT #11: Data API & Enterprise Data Feed ---
+
+What: Raw anonymized transaction-level data accessible via API or bulk file delivery.
+For enterprise clients and research agencies who want to run their own analytics.
+
+Data fields available:
+- transaction_id (anonymized), date, time, store_chain, retailer_group
+- item_name, normalized_brand, granular_category, parent_category, group
+- item_price, quantity, unit_price, unit_of_measure, price_per_kg_or_l
+- is_discount, is_premium, is_private_label, health_score
+- shopper_segment, age_range, household_size, region (Flanders/Wallonia/Brussels)
+
+Delivery: REST API (JSON), bulk CSV/Parquet via SFTP, or Snowflake Data Share.
+Target: Research agencies, large FMCG brands with internal data science teams, PE firms.
+Price: EUR 20,000-80,000/year depending on scope and volume.
+
+
+--- DATA PRODUCT #12: Audience Segments for Media Activation ---
+
+What: Purchase-verified audience segments that media agencies and brands can use for
+targeted advertising. Modeled after Ibotta Audiences and Attain's OutcomeHQ.
+
+Example segments:
+- "Belgian households that buy organic dairy at Delhaize"
+- "Heavy beer buyers who switched from Jupiler to private label in last 6 months"
+- "Young families spending >EUR 150/week on groceries"
+- "Promo-responsive shoppers in Flanders"
+
+Delivery: Anonymized audience lists activated through media platforms or data clean rooms.
+Requires: LiveRamp or similar identity resolution partnership.
+Target: Media agencies, brand media teams, DSPs.
+Price: CPM-based (EUR 3-8 per 1,000 impressions) or flat fee EUR 10,000-50,000/year.
+Revenue potential at scale: HIGH. Ibotta generates significant revenue from this.
+
+Note: Requires 50,000+ active users minimum for meaningful audience scale.
+This is a Year 2-3 product, not a launch product.
+
+
+--- PRODUCT TIER SUMMARY ---
+
+Tier 1 - STARTER (EUR 99-499/month | EUR 1,200-6,000/year)
+Target: Micro/small Belgian food brands, artisanal producers, startups
+Includes: Monthly Datamart (limited categories) + Brand Scorecard + 3 report runs/month
+Why they buy: Need data for retailer listing meetings. Currently have zero market data.
+
+Tier 2 - GROWTH (EUR 500-1,500/month | EUR 6,000-18,000/year)
+Target: Established SMB brands (Lotus, Devos-Lemmens, La William, Imperial, local breweries)
+Includes: Full Datamart + Scorecard + Category Trends + Price Monitor + PL Monitor +
+Shopper Segmentation + 10 report runs/month + data exports
+Why they buy: Need competitive intelligence, pricing strategy validation, promo optimization.
+
+Tier 3 - ENTERPRISE (EUR 2,500-8,000/month | EUR 30,000-96,000/year)
+Target: Large FMCG brands, Belgian retailers, research agencies, PE firms
+Includes: Everything + Cross-Shopping Analysis + API access + custom analyses +
+audience segments + dedicated support + quarterly strategic presentations
+Why they buy: Cross-retailer insights that no one else provides. Data for internal BI.
+
+Free Tier - FREEMIUM
+Target: Any brand
+Includes: 1-3 basic category snapshot reports
+Purpose: Lead generation. Demonstrate data quality. Convert to paid tiers.
+
+
+--- TARGET CLIENT SEGMENTS ---
+
+| Segment                          | Who                                                    | Price           | Volume        |
+| Belgian SMB food producers       | Artisanal cheese, local breweries, sauce makers        | EUR 200-600/mo  | 1,000s        |
+| Mid-size Belgian brands          | Lotus, Devos-Lemmens, La William, Imperial             | EUR 1,000-4,000/mo | 50-100     |
+| Private label manufacturers      | Contract manufacturers supplying Boni, 365, etc.       | EUR 1,000-3,000/mo | 20-50      |
+| Market research agencies         | Belgian/EU research firms advising FMCG brands         | EUR 800-2,500/mo   | 20-30      |
+| Retailer private label teams     | Colruyt (Boni), Delhaize (365) wanting cross-retailer  | EUR 2,500-8,000/mo | 3-5        |
+| Private equity / financial       | Investment firms wanting consumer spending signals      | EUR 2,500-5,000/mo | 5-15       |
+
+
+--- REVENUE PROJECTIONS ---
+
+Year 1 (building panel to 5,000 users):
+- First sample reports at 1,000 users (Month 5-6)
+- First paying clients at 2,000 users: 3-5 clients at EUR 300-500/mo = EUR 900-2,500/mo
+- Growing at 3,500 users: 5-10 clients = EUR 1,500-5,000/mo
+- Year 1 data product revenue: EUR 5,000-15,000
+
+Year 2 (5,000-15,000 users):
+- Full product suite live (Datamart, Scorecards, Category Reports, Price Monitor)
+- 15-30 paying clients across tiers
+- Add first ad-hoc research projects
+- Year 2 data product revenue: EUR 50,000-180,000
+
+Year 3 (15,000-50,000 users):
+- Enterprise products live (API, Cross-Shopping, Audience Segments)
+- 40-80 paying clients
+- First agency/retailer enterprise contracts
+- Year 3 data product revenue: EUR 200,000-500,000
+
+Critical mass: 25,000-50,000 households (0.5-1% of Belgium's 4.9M households) for
+statistical credibility with enterprise data buyers.
+
+
+--- DELIVERY INFRASTRUCTURE ---
+
+Receipt scanning (existing) -> Gemini AI extraction -> PostgreSQL transaction DB
+-> Nightly ETL aggregation query -> Monthly Datamart
+-> PDF/PPT reports (Tier 1-2) | Dashboard (Tier 2-3) | API + CSV (Tier 3)
+
+Technical stack for data products:
+- Data warehouse: PostgreSQL (existing) -> migrate to Snowflake at scale
+- Dashboard: Looker or custom-built web dashboard
+- Reports: Automated PDF/PPT generation from datamart
+- API: REST API with auth, rate limiting, usage tracking
+- Data marketplace: Snowflake Marketplace listing at scale (Year 3+)
+
+Lookup tables maintained manually:
+- dim_store (~15 rows — store chain metadata)
+- dim_category (~200 rows — app's category hierarchy)
+- dim_brand (~50-100 rows — top brands, private label flags)
+
+
+--- COMPETITIVE MOAT ---
+
+1. Cross-retailer view: Colruyt, Delhaize, Carrefour, Lidl, Aldi all in one dataset.
+   Retailers will NEVER share cross-retailer data. This gap is permanent.
+2. Actual prices paid: Not shelf prices. What consumers actually paid after discounts.
+3. Health scoring: Nutri-Score on every item. No panel provider does this.
+4. Full-basket context: Basket affinity and cross-purchase patterns.
+5. Belgium-specific: Global players lack depth in small markets. Milo = THE Belgian specialist.
+6. SMB-accessible pricing: 10-100x cheaper than YouGov/GfK for the most-valued KPIs.
+7. Consumer-permissioned: First-party, GDPR-compliant consent-based data.
+8. Data compounds: Historical data becomes more valuable every month. First-mover advantage.
+9. Receipt + survey hybrid: Can add attitudinal data via in-app micro-surveys (YouGov model).
+
+Deep research documents saved:
+- data-products-market-research.md (competitive intelligence across 7 topics)
+- research-data-monetization-receipt-data.md (monetization strategies, pricing, buyer segments)
+
+

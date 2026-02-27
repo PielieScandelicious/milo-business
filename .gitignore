@@ -1,0 +1,27 @@
+# macOS
+.DS_Store
+**/.DS_Store
+
+# Node.js
+node_modules/
+**/node_modules/
+
+# LaTeX auxiliary files
+*.aux
+*.log
+*.out
+*.toc
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+
+# Video and audio files
+*.mp4
+*.mov
+*.mp3
+*.avi
+*.webm
+*.mkv
+
+# Nested git repos (managed separately)
+milo-video/remotion/milo-video/
